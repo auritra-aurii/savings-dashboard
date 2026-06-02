@@ -294,6 +294,7 @@ function cellVal(val, colIdx) {
 
 function render(rows) {
   // Row 0 = headers (skip), row 1 onward = data
+  localStorage.setItem("fdr_cache", JSON.stringify(rows));
   const dataRows = rows.slice(1);
 
   // Detect special rows by bank/first-col value
