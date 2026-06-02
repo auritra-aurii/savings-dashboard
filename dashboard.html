@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#1a3a5c" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="FDR Dashboard" />
-  <title>FDR Dashboard</title>
+  <meta name="apple-mobile-web-app-title" content="My Savings" />
+  <title>My Savings</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -19,20 +19,14 @@
       --total-bg:   #bfdbfe;
       --nit-bg:     #93c5fd;
       --white:      #ffffff;
-      --gray-50:    #f8fafc;
       --gray-100:   #f1f5f9;
       --gray-200:   #e2e8f0;
       --gray-400:   #94a3b8;
-      --gray-600:   #475569;
-      --gray-800:   #1e293b;
       --text:       #0f172a;
-      --green:      #166534;
-      --green-bg:   #dcfce7;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 16px; }
-
     body {
       font-family: 'Inter', 'Noto Sans Bengali', sans-serif;
       background: var(--gray-100);
@@ -51,16 +45,19 @@
     }
     .header-top {
       display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 14px;
+      margin-bottom: 6px;
     }
-    .header h1 {
-      font-size: 20px; font-weight: 700; letter-spacing: .01em;
+    .header h1 { font-size: 20px; font-weight: 700; }
+    .header-subtitle {
+      font-size: 12px; color: rgba(255,255,255,.55);
+      margin-bottom: 14px;
     }
     .sync-pill {
       display: flex; align-items: center; gap: 5px;
       background: rgba(255,255,255,.12);
       border-radius: 99px; padding: 4px 10px;
       font-size: 11px; color: rgba(255,255,255,.8);
+      flex-shrink: 0;
     }
     .sync-dot {
       width: 6px; height: 6px; border-radius: 50%;
@@ -69,7 +66,7 @@
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-    /* ── SUMMARY PILLS ── */
+    /* summary cards — only shown on FDR screen */
     .summary-row {
       display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
     }
@@ -78,23 +75,76 @@
       border: 1px solid rgba(255,255,255,.15);
       border-radius: 10px; padding: 10px 12px;
     }
-    .sum-label {
-      font-size: 10px; font-weight: 500; letter-spacing: .05em;
-      text-transform: uppercase; color: rgba(255,255,255,.6);
-      margin-bottom: 3px;
-    }
-    .sum-value {
-      font-size: 17px; font-weight: 700; color: #fff;
-      letter-spacing: -.01em;
-    }
+    .sum-label { font-size: 10px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 3px; }
+    .sum-value { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -.01em; }
     .sum-value .tk { font-size: 13px; font-weight: 500; margin-right: 1px; opacity: .8; }
+
+    /* back button */
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.15); border: none; color: white;
+      border-radius: 99px; padding: 6px 14px; font-size: 13px;
+      cursor: pointer; margin-bottom: 14px; font-family: inherit;
+    }
+    .back-btn:active { background: rgba(255,255,255,.25); }
 
     /* ── LAST SYNCED ── */
     .last-sync {
-      text-align: center;
-      font-size: 11px; color: var(--gray-400);
+      text-align: center; font-size: 11px; color: var(--gray-400);
       padding: 8px 0 4px;
     }
+
+    /* ── HOME SCREEN ── */
+    .home-wrap {
+      padding: 24px 16px 40px;
+    }
+    .home-greeting {
+      font-size: 22px; font-weight: 700; color: var(--blue-dark);
+      margin-bottom: 6px;
+    }
+    .home-sub {
+      font-size: 14px; color: var(--gray-400); margin-bottom: 28px;
+    }
+    .home-grid {
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .home-btn {
+      display: flex; align-items: center; gap: 16px;
+      background: white; border: 1.5px solid var(--gray-200);
+      border-radius: 16px; padding: 20px 18px;
+      cursor: pointer; text-align: left;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+      transition: border-color .15s, box-shadow .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .home-btn:active {
+      border-color: var(--blue-mid);
+      box-shadow: 0 2px 12px rgba(37,99,168,.15);
+    }
+    .home-btn-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; flex-shrink: 0;
+    }
+    .home-btn-text {}
+    .home-btn-title {
+      font-size: 16px; font-weight: 700; color: var(--blue-dark);
+      margin-bottom: 3px; line-height: 1.2;
+    }
+    .home-btn-desc {
+      font-size: 12px; color: var(--gray-400); line-height: 1.3;
+    }
+    .home-btn-arrow {
+      margin-left: auto; font-size: 20px;
+      color: var(--gray-400); flex-shrink: 0;
+    }
+
+    /* color accents per section */
+    .ic-fdr    { background: #dbeafe; }
+    .ic-kafco  { background: #dcfce7; }
+    .ic-dps    { background: #fef9c3; }
+    .ic-padma  { background: #fce7f3; }
+    .ic-bank   { background: #ede9fe; }
 
     /* ── TABLE WRAPPER ── */
     .table-wrap {
@@ -102,87 +152,38 @@
       -webkit-overflow-scrolling: touch;
       padding: 12px 16px 32px;
     }
-
     table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
+      width: 100%; border-collapse: collapse;
+      background: white; border-radius: 12px; overflow: hidden;
       box-shadow: 0 1px 6px rgba(0,0,0,.08);
-      font-size: 14px;
-      min-width: 700px;  /* allows horizontal scroll on small screens */
+      font-size: 14px; min-width: 500px;
     }
-
-    /* Title row */
     .row-title td {
-      background: var(--blue-dark);
-      color: white;
-      text-align: center;
-      font-size: 16px;
-      font-weight: 700;
-      padding: 13px;
-      letter-spacing: .04em;
+      background: var(--blue-dark); color: white;
+      text-align: center; font-size: 15px; font-weight: 700;
+      padding: 12px; letter-spacing: .04em;
     }
-
-    /* Header row */
     thead tr:last-child th {
-      background: var(--blue-mid);
-      color: white;
-      font-size: 12px;
-      font-weight: 600;
-      text-align: center;
-      padding: 10px 8px;
-      border-right: 1px solid rgba(255,255,255,.15);
-      vertical-align: bottom;
-      line-height: 1.35;
+      background: var(--blue-mid); color: white;
+      font-size: 12px; font-weight: 600; text-align: center;
+      padding: 10px 8px; border-right: 1px solid rgba(255,255,255,.15);
+      vertical-align: bottom; line-height: 1.35;
     }
     thead tr:last-child th:last-child { border-right: none; }
-
-    /* Body rows */
     tbody tr td {
-      padding: 10px 8px;
-      border-bottom: 1px solid var(--gray-200);
+      padding: 10px 8px; border-bottom: 1px solid var(--gray-200);
       border-right: 1px solid var(--gray-200);
-      text-align: center;
-      vertical-align: middle;
-      line-height: 1.3;
+      text-align: center; vertical-align: middle; line-height: 1.3;
     }
     tbody tr td:last-child { border-right: none; }
-    tbody tr td:first-child { font-weight: 600; text-align: center; }
-
-    /* Alternating rows */
+    tbody tr td:first-child { font-weight: 600; }
     tbody tr.data-row:nth-child(odd)  td { background: var(--white); }
     tbody tr.data-row:nth-child(even) td { background: var(--blue-pale); }
-
-    /* Hover */
-    tbody tr.data-row:hover td { background: var(--blue-light) !important; }
-
-    /* TOTAL row */
-    tr.row-total td {
-      background: var(--total-bg) !important;
-      font-weight: 700;
-      font-size: 14px;
-      border-top: 2px solid var(--blue-mid);
-    }
-
-    /* Sonchoypotro row — slightly different shade */
-    tr.row-sonchoypotro td {
-      background: var(--gray-100) !important;
-      font-style: italic;
-    }
-    tr.row-sonchoypotro td:first-child { font-style: normal; font-weight: 600; }
-
-    /* NIT TOTAL row */
-    tr.row-nit td {
-      background: var(--nit-bg) !important;
-      font-weight: 700;
-      font-size: 15px;
-      border-top: 2px solid var(--blue-dark);
-      color: var(--blue-dark);
-    }
-
-    /* number columns right-align */
+    tbody tr.data-row:active td { background: var(--blue-light) !important; }
+    tr.row-total td { background: var(--total-bg) !important; font-weight: 700; border-top: 2px solid var(--blue-mid); }
+    tr.row-sonchoypotro td { background: var(--gray-100) !important; }
+    tr.row-sonchoypotro td:first-child { font-weight: 600; }
+    tr.row-nit td { background: var(--nit-bg) !important; font-weight: 700; font-size: 15px; border-top: 2px solid var(--blue-dark); color: var(--blue-dark); }
     .num { text-align: right !important; font-variant-numeric: tabular-nums; }
 
     /* ── LOADING / ERROR ── */
@@ -193,24 +194,26 @@
     }
     .spinner {
       width: 32px; height: 32px;
-      border: 3px solid var(--gray-200);
-      border-top-color: var(--blue-mid);
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
-      margin: 0 auto 14px;
+      border: 3px solid var(--gray-200); border-top-color: var(--blue-mid);
+      border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 14px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* hide/show helpers */
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
+<!-- ══ HEADER ══ -->
+<div class="header" id="app-header">
   <div class="header-top">
-    <h1>📊 FDR's</h1>
+    <h1 id="header-title">📊 My Savings</h1>
     <div class="sync-pill"><div class="sync-dot"></div> Live</div>
   </div>
-  <div class="summary-row">
+  <div id="header-sub" class="header-subtitle">Tap a section to view</div>
+  <button class="back-btn hidden" id="back-btn" onclick="showHome()">← Back</button>
+  <div class="summary-row hidden" id="fdr-summary">
     <div class="sum-card">
       <div class="sum-label">Total Principal</div>
       <div class="sum-value"><span class="tk">৳</span><span id="s-principal">—</span></div>
@@ -224,34 +227,110 @@
 
 <div id="last-sync" class="last-sync"></div>
 
-<!-- TABLE or STATE -->
-<div id="root">
-  <div class="state-box"><div class="spinner"></div>Loading your data…</div>
+<!-- ══ HOME SCREEN ══ -->
+<div id="screen-home" class="home-wrap">
+  <div class="home-greeting">আসসালামু আলাইকুম 🌸</div>
+  <div class="home-sub">What would you like to see today?</div>
+  <div class="home-grid">
+
+    <div class="home-btn" onclick="showSection('fdr')">
+      <div class="home-btn-icon ic-fdr">📊</div>
+      <div class="home-btn-text">
+        <div class="home-btn-title">FDR's</div>
+        <div class="home-btn-desc">Fixed deposits &amp; monthly income</div>
+      </div>
+      <div class="home-btn-arrow">›</div>
+    </div>
+
+    <div class="home-btn" onclick="showSection('kafco')">
+      <div class="home-btn-icon ic-kafco">💰</div>
+      <div class="home-btn-text">
+        <div class="home-btn-title">Big Funds from KAFCO</div>
+        <div class="home-btn-desc">Large funds received</div>
+      </div>
+      <div class="home-btn-arrow">›</div>
+    </div>
+
+    <div class="home-btn" onclick="showSection('dps')">
+      <div class="home-btn-icon ic-dps">🏦</div>
+      <div class="home-btn-text">
+        <div class="home-btn-title">Running DPS</div>
+        <div class="home-btn-desc">Active DPS accounts</div>
+      </div>
+      <div class="home-btn-arrow">›</div>
+    </div>
+
+    <div class="home-btn" onclick="showSection('padma')">
+      <div class="home-btn-icon ic-padma">🌸</div>
+      <div class="home-btn-text">
+        <div class="home-btn-title">Padma Bank Tenure</div>
+        <div class="home-btn-desc">Padma Bank FDR details</div>
+      </div>
+      <div class="home-btn-arrow">›</div>
+    </div>
+
+    <div class="home-btn" onclick="showSection('bank')">
+      <div class="home-btn-icon ic-bank">🏛️</div>
+      <div class="home-btn-text">
+        <div class="home-btn-title">Bank Accounts</div>
+        <div class="home-btn-desc">Geetasree Halder's accounts</div>
+      </div>
+      <div class="home-btn-arrow">›</div>
+    </div>
+
+  </div>
 </div>
 
+<!-- ══ SECTION SCREENS ══ -->
+<div id="screen-fdr"   class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
+<div id="screen-kafco" class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
+<div id="screen-dps"   class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
+<div id="screen-padma" class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
+<div id="screen-bank"  class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
+
 <script>
-// ─────────────────────────────────────────────────────────
-// ★ PASTE YOUR GOOGLE SHEET CSV URL BELOW ★
-// Format: https://docs.google.com/spreadsheets/d/YOUR_ID/gviz/tq?tqx=out:csv&sheet=YOUR_TAB_NAME
-// ─────────────────────────────────────────────────────────
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1yO68AOIsJoX-ffWX7d4XqBTNODaw_mQZNtAYdBu662c/gviz/tq?tqx=out:csv&sheet=APP_FDR";
+// ══════════════════════════════════════════════════
+// ★ CONFIG — paste your Sheet ID once here ★
+// ══════════════════════════════════════════════════
+const SHEET_ID = "1yO68AOIsJoX-ffWX7d4XqBTNODaw_mQZNtAYdBu662c";
+// e.g. "1aBcDeFgHiJkLmNoPqRsTuVwXy"
 
-const REFRESH_MS = 300_000; // refresh every 60 seconds
-
-// Column indices (0-based) — must match your sheet header order exactly
-const C = {
-  bank:0, date:1, principal:2, rate:3, duration:4,
-  input:5, beforeTax:6, afterTax:7, monthlyBefore:8, monthlyAfter:9
+// Tab names (exact, case-sensitive)
+const TABS = {
+  fdr:   "new fdrs",
+  kafco: "MISC",
+  dps:   "APP_DPS",
+  padma: "APP_DPS",
+  bank:  "baba",
 };
 
-const HEADERS = [
-  "Bank","Date","Principal\nAmount","Interest\nRate","Duration\n(Months)",
-  "Interest\nInput","Interest\nBefore Tax","Interest After\nTax Ded. (10%)",
-  "Monthly Interest\nBefore Tax","Monthly Interest\nAfter Tax"
-];
+// Cell ranges per section (null = whole sheet)
+const RANGES = {
+  fdr:   "A1:J15",
+  kafco: "D3:E15",
+  dps:   "A22:G29",
+  padma: "I23:K28",
+  bank:  "A13:E19",
+};
 
-// Which columns are numeric (right-align + format with commas)
-const NUM_COLS = new Set([2,6,7,8,9]);
+const REFRESH_MS = 300_000;
+
+// FDR columns (after removing cols 7&8: Interest before tax, Interest after tax ded.)
+// Remaining: Bank, Date, Principal, Rate, Duration, Interest Input, Monthly Before Tax, Monthly After Tax
+const FDR_HEADERS = [
+  "Bank","Date","Principal\nAmount","Interest\nRate","Duration\n(Months)",
+  "Interest\nInput","Monthly Interest\nBefore Tax","Monthly Interest\nAfter Tax"
+];
+const FDR_NUM_COLS = new Set([2,6,7]);
+// original col indices to KEEP (drop original 6 & 7 = before tax, after tax ded.)
+const FDR_KEEP = [0,1,2,3,4,5,8,9];
+
+// ══ CSV helpers ══════════════════════════════════
+function csvUrl(tab, range) {
+  let url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
+  if (range) url += `&range=${range}`;
+  return url;
+}
 
 function parseCSV(text) {
   const rows = [];
@@ -273,129 +352,212 @@ function cleanNum(s) {
   const n = parseFloat(String(s||"").replace(/[^0-9.\-]/g,""));
   return isNaN(n) ? 0 : n;
 }
-
 function fmtNum(s) {
   const n = cleanNum(s);
   if (n === 0 && !String(s||"").match(/\d/)) return s || "—";
-  return n.toLocaleString("en-IN", {minimumFractionDigits:0, maximumFractionDigits:2});
+  return n.toLocaleString("en-IN",{minimumFractionDigits:0,maximumFractionDigits:2});
 }
-
 function fmtSummary(n) {
-  if (n >= 1e7) return (n/1e7).toFixed(2) + " Cr";
-  if (n >= 1e5) return (n/1e5).toFixed(2) + " L";
+  if (n >= 1e7) return (n/1e7).toFixed(2)+" Cr";
+  if (n >= 1e5) return (n/1e5).toFixed(2)+" L";
   return n.toLocaleString("en-IN",{maximumFractionDigits:0});
 }
 
-function cellVal(val, colIdx) {
-  if (NUM_COLS.has(colIdx)) return fmtNum(val);
-  // rate column: keep as-is (e.g. 9.35%)
-  return val || "—";
-}
-
-function render(rows) {
-  // Row 0 = headers (skip), row 1 onward = data
-  localStorage.setItem("fdr_cache", JSON.stringify(rows));
-  const dataRows = rows.slice(1);
-
-  // Detect special rows by bank/first-col value
-  function rowType(r) {
-    const b = (r[C.bank]||"").trim().toLowerCase();
-    if (b === "total" || b === "নিট মোট" || b.includes("total")) return "total";
-    if (b === "sonchoypotro" || b.includes("sanchay") || b.includes("sonchoy")) return "sonchoypotro";
-    if (b === "nit total" || b.includes("nit")) return "nit";
-    return "data";
-  }
-
-  // Summaries from TOTAL or NIT TOTAL row
-  let totalPrincipal = 0, totalMonthly = 0;
- for (const r of dataRows) {
-    totalPrincipal += cleanNum(r[C.principal]);
-    totalMonthly   += cleanNum(r[C.monthlyAfter]);
-  }
-
-  document.getElementById("s-principal").textContent = fmtSummary(totalPrincipal);
-  document.getElementById("s-monthly").textContent   = fmtSummary(totalMonthly);
-  document.getElementById("last-sync").textContent   =
-    "Last synced: " + new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"});
-
-  // Build table
+// ══ Generic table builder ════════════════════════
+function buildTable(rows, title, numColSet) {
+  if (!rows || rows.length < 1) return "<div class='state-box'>No data found.</div>";
   const wrap = document.createElement("div");
   wrap.className = "table-wrap";
-
   const tbl = document.createElement("table");
-
-  // Title row
+  const headerRow = rows[0];
+  const colCount = headerRow.length;
   tbl.innerHTML = `<thead>
-    <tr class="row-title"><td colspan="10">FDR'S</td></tr>
-    <tr>${HEADERS.map(h=>`<th>${h.replace(/\n/g,"<br>")}</th>`).join("")}</tr>
+    <tr class="row-title"><td colspan="${colCount}">${title}</td></tr>
+    <tr>${headerRow.map(h=>`<th>${h}</th>`).join("")}</tr>
   </thead><tbody></tbody>`;
-
   const tbody = tbl.querySelector("tbody");
-
-  for (const r of dataRows) {
-    const type = rowType(r);
+  for (const r of rows.slice(1)) {
+    if (r.every(c=>!c)) continue; // skip blank rows
     const tr = document.createElement("tr");
-    tr.className = type === "data" ? "data-row"
-                 : type === "total" ? "row-total"
-                 : type === "sonchoypotro" ? "row-sonchoypotro"
-                 : "row-nit";
-
-    for (let i = 0; i < 10; i++) {
+    tr.className = "data-row";
+    for (let i=0;i<colCount;i++) {
       const td = document.createElement("td");
-      if (NUM_COLS.has(i)) td.className = "num";
-      td.textContent = cellVal(r[i], i);
+      const val = r[i]||"";
+      if (numColSet && numColSet.has(i)) { td.className="num"; td.textContent=fmtNum(val); }
+      else td.textContent = val||"—";
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
   }
-
   wrap.appendChild(tbl);
-  document.getElementById("root").innerHTML = "";
-  document.getElementById("root").appendChild(wrap);
+  return wrap;
 }
 
-async function load() {
-  if (SHEET_CSV_URL === "YOUR_CSV_URL_HERE") {
-    document.getElementById("root").innerHTML = `
-      <div class="state-box">
-        <div style="font-size:32px;margin-bottom:12px">⚙️</div>
-        <strong>Setup needed</strong><br><br>
-        Open <code>dashboard.html</code> in a text editor<br>
-        and replace <code>YOUR_CSV_URL_HERE</code><br>with your Google Sheet CSV URL.
-      </div>`;
+// ══ FDR render ═══════════════════════════════════
+function renderFDR(rows) {
+  localStorage.setItem("fdr_cache", JSON.stringify(rows));
+
+  const dataRows = rows.slice(1);
+
+  function rowType(r) {
+    const b = (r[0]||"").trim().toLowerCase();
+    if (b.includes("nit")) return "nit";
+    if (b.includes("total")) return "total";
+    if (b.includes("sonchoy")||b.includes("sanchay")||b==="sonchoypotro") return "sonchoypotro";
+    return "data";
+  }
+
+  // Summaries — sum everything
+  let totalPrincipal=0, totalMonthly=0;
+  for (const r of dataRows) {
+    totalPrincipal += cleanNum(r[2]);
+    totalMonthly   += cleanNum(r[9]);
+  }
+  document.getElementById("s-principal").textContent = fmtSummary(totalPrincipal);
+  document.getElementById("s-monthly").textContent   = fmtSummary(totalMonthly);
+
+  // Build table with columns 7&8 removed
+  const wrap = document.createElement("div");
+  wrap.className = "table-wrap";
+  const tbl = document.createElement("table");
+  const colCount = FDR_HEADERS.length;
+  tbl.innerHTML = `<thead>
+    <tr class="row-title"><td colspan="${colCount}">FDR'S</td></tr>
+    <tr>${FDR_HEADERS.map(h=>`<th>${h.replace(/\n/g,"<br>")}</th>`).join("")}</tr>
+  </thead><tbody></tbody>`;
+  const tbody = tbl.querySelector("tbody");
+
+  for (const r of dataRows) {
+    if (r.every(c=>!c)) continue;
+    const type = rowType(r);
+    const tr = document.createElement("tr");
+    tr.className = type==="data"?"data-row":type==="total"?"row-total":type==="sonchoypotro"?"row-sonchoypotro":"row-nit";
+    FDR_KEEP.forEach((origIdx, newIdx) => {
+      const td = document.createElement("td");
+      const val = r[origIdx]||"";
+      if (FDR_NUM_COLS.has(newIdx)) { td.className="num"; td.textContent=fmtNum(val); }
+      else td.textContent = val||"—";
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  }
+  wrap.appendChild(tbl);
+
+  const screen = document.getElementById("screen-fdr");
+  screen.innerHTML="";
+  screen.appendChild(wrap);
+}
+
+// ══ Navigation ═══════════════════════════════════
+const SECTION_META = {
+  fdr:   { title:"📊 FDR's",               sub:"Fixed deposits & monthly income" },
+  kafco: { title:"💰 Funds from KAFCO",     sub:"Large funds received" },
+  dps:   { title:"🏦 Running DPS",          sub:"Active DPS accounts" },
+  padma: { title:"🌸 Padma Bank Tenure",    sub:"Padma Bank FDR details" },
+  bank:  { title:"🏛️ Bank Accounts",        sub:"Geetasree Halder" },
+};
+
+let currentSection = null;
+
+function showHome() {
+  currentSection = null;
+  document.getElementById("screen-home").classList.remove("hidden");
+  ["fdr","kafco","dps","padma","bank"].forEach(s=>document.getElementById("screen-"+s).classList.add("hidden"));
+  document.getElementById("header-title").textContent = "📊 My Savings";
+  document.getElementById("header-sub").classList.remove("hidden");
+  document.getElementById("back-btn").classList.add("hidden");
+  document.getElementById("fdr-summary").classList.add("hidden");
+  document.getElementById("last-sync").textContent = "";
+}
+
+function showSection(name) {
+  currentSection = name;
+  document.getElementById("screen-home").classList.add("hidden");
+  ["fdr","kafco","dps","padma","bank"].forEach(s=>{
+    document.getElementById("screen-"+s).classList.toggle("hidden", s!==name);
+  });
+  const meta = SECTION_META[name];
+  document.getElementById("header-title").textContent = meta.title;
+  document.getElementById("header-sub").classList.add("hidden");
+  document.getElementById("back-btn").classList.remove("hidden");
+  document.getElementById("fdr-summary").classList.toggle("hidden", name!=="fdr");
+  loadSection(name);
+}
+
+// ══ Data loading ══════════════════════════════════
+const sectionLoaded = {};
+
+async function loadSection(name) {
+  if (SHEET_ID === "YOUR_SHEET_ID_HERE") {
+    document.getElementById("screen-"+name).innerHTML=`
+      <div class='state-box'><div style='font-size:32px;margin-bottom:12px'>⚙️</div>
+      <strong>Setup needed</strong><br><br>Paste your Sheet ID into the SHEET_ID variable in the code.</div>`;
     return;
   }
+
+  const tab = TABS[name];
+  const range = RANGES[name];
+  const url = csvUrl(tab, range) + "&t=" + Date.now();
+
   try {
-    const res = await fetch(SHEET_CSV_URL + "&t=" + Date.now());
-    if (!res.ok) throw new Error("HTTP " + res.status);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("HTTP "+res.status);
     const text = await res.text();
     const rows = parseCSV(text);
-    if (rows.length < 2) throw new Error("Sheet appears empty");
-    render(rows);
-} catch(e) {
-    console.error(e);
-    const cached = localStorage.getItem("fdr_cache");
-    if (cached) {
-      render(JSON.parse(cached));
-      document.getElementById("last-sync").textContent += " (offline — showing last saved data)";
+
+    // Cache it
+    localStorage.setItem("cache_"+name, JSON.stringify(rows));
+    sectionLoaded[name] = true;
+
+    if (name === "fdr") {
+      renderFDR(rows);
     } else {
-      document.getElementById("root").innerHTML = `
-        <div class="state-box">
-          <div style="font-size:32px;margin-bottom:12px">⚠️</div>
-          <strong>No connection & no cached data</strong><br><br>
-          Please open the dashboard on WiFi first.
-        </div>`;
+      const titles = {
+        kafco:"BIG FUNDS RECEIVED FROM KAFCO",
+        dps:"RUNNING DPS",
+        padma:"PADMA BANK TENURE",
+        bank:"BANK ACCOUNTS — GEETASREE HALDER"
+      };
+      const el = document.getElementById("screen-"+name);
+      el.innerHTML = "";
+      const built = buildTable(rows, titles[name], new Set([1,2,3,4,5,6]));
+      if (typeof built === "string") el.innerHTML = built;
+      else el.appendChild(built);
+    }
+
+    document.getElementById("last-sync").textContent =
+      "Last synced: " + new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"});
+
+  } catch(e) {
+    console.error(e);
+    // Try cache
+    const cached = localStorage.getItem("cache_"+name);
+    if (cached) {
+      const rows = JSON.parse(cached);
+      if (name==="fdr") renderFDR(rows);
+      else {
+        const titles={kafco:"BIG FUNDS RECEIVED FROM KAFCO",dps:"RUNNING DPS",padma:"PADMA BANK TENURE",bank:"BANK ACCOUNTS — GEETASREE HALDER"};
+        const el=document.getElementById("screen-"+name);
+        el.innerHTML="";
+        const built=buildTable(rows,titles[name],new Set([1,2,3,4,5,6]));
+        if(typeof built==="string")el.innerHTML=built; else el.appendChild(built);
+      }
+      document.getElementById("last-sync").textContent =
+        "Offline — showing last saved data";
+    } else {
+      document.getElementById("screen-"+name).innerHTML=`
+        <div class='state-box'><div style='font-size:32px;margin-bottom:12px'>⚠️</div>
+        <strong>Could not load data</strong><br><br>${e.message}<br><br>
+        Make sure the sheet is <strong>publicly shared</strong>.</div>`;
     }
   }
 }
-const cached = localStorage.getItem("fdr_cache");
-if (cached) render(JSON.parse(cached));
-load();
-setInterval(load, REFRESH_MS);
 
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js");
-}
+// Auto-refresh current section every 5 minutes
+setInterval(()=>{ if(currentSection) loadSection(currentSection); }, REFRESH_MS);
+
+// Start on home
+showHome();
 </script>
 </body>
 </html>
