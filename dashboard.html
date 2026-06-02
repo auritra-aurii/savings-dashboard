@@ -372,14 +372,20 @@ async function load() {
     const rows = parseCSV(text);
     if (rows.length < 2) throw new Error("Sheet appears empty");
     render(rows);
-  } catch(e) {
+} catch(e) {
     console.error(e);
-    document.getElementById("root").innerHTML = `
-      <div class="state-box">
-        <div style="font-size:32px;margin-bottom:12px">⚠️</div>
-        <strong>Could not load data</strong><br><br>${e.message}<br><br>
-        Make sure the sheet is <strong>publicly shared</strong> and the URL is correct.
-      </div>`;
+    const cached = localStorage.getItem("fdr_cache");
+    if (cached) {
+      render(JSON.parse(cached));
+      document.getElementById("last-sync").textContent += " (offline — showing last saved data)";
+    } else {
+      document.getElementById("root").innerHTML = `
+        <div class="state-box">
+          <div style="font-size:32px;margin-bottom:12px">⚠️</div>
+          <strong>No connection & no cached data</strong><br><br>
+          Please open the dashboard on WiFi first.
+        </div>`;
+    }
   }
 }
 const cached = localStorage.getItem("fdr_cache");
