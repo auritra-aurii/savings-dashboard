@@ -307,25 +307,9 @@ function render(rows) {
 
   // Summaries from TOTAL or NIT TOTAL row
   let totalPrincipal = 0, totalMonthly = 0;
-  for (const r of dataRows) {
-    const t = rowType(r);
-    if (t === "nit") {
-      totalPrincipal = cleanNum(r[C.principal]) || totalPrincipal;
-      totalMonthly   = cleanNum(r[C.monthlyAfter]) || totalMonthly;
-    }
-    if (t === "total" && totalPrincipal === 0) {
-      totalPrincipal = cleanNum(r[C.principal]);
-      totalMonthly   = cleanNum(r[C.monthlyAfter]);
-    }
-  }
-  // Fallback: sum data rows
-  if (totalPrincipal === 0) {
-    for (const r of dataRows) {
-      if (rowType(r) === "data") {
-        totalPrincipal += cleanNum(r[C.principal]);
-        totalMonthly   += cleanNum(r[C.monthlyAfter]);
-      }
-    }
+ for (const r of dataRows) {
+    totalPrincipal += cleanNum(r[C.principal]);
+    totalMonthly   += cleanNum(r[C.monthlyAfter]);
   }
 
   document.getElementById("s-principal").textContent = fmtSummary(totalPrincipal);
