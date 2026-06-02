@@ -382,6 +382,10 @@ async function load() {
       </div>`;
   }
 }
+const cached = localStorage.getItem("fdr_cache");
+if (cached) render(JSON.parse(cached));
+load();
+setInterval(load, REFRESH_MS);
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js");
