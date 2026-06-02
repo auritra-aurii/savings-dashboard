@@ -24,62 +24,38 @@
       --gray-400:   #94a3b8;
       --text:       #0f172a;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 16px; }
     body {
       font-family: 'Inter', 'Noto Sans Bengali', sans-serif;
-      background: var(--gray-100);
-      color: var(--text);
-      min-height: 100dvh;
-      -webkit-text-size-adjust: 100%;
+      background: var(--gray-100); color: var(--text);
+      min-height: 100dvh; -webkit-text-size-adjust: 100%;
     }
 
     /* ── HEADER ── */
     .header {
-      background: var(--blue-dark);
-      color: white;
+      background: var(--blue-dark); color: white;
       padding: 20px 16px 16px;
       position: sticky; top: 0; z-index: 10;
       box-shadow: 0 2px 8px rgba(0,0,0,.25);
     }
-    .header-top {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 6px;
-    }
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
     .header h1 { font-size: 20px; font-weight: 700; }
-    .header-subtitle {
-      font-size: 12px; color: rgba(255,255,255,.55);
-      margin-bottom: 14px;
-    }
+    .header-subtitle { font-size: 12px; color: rgba(255,255,255,.55); margin-bottom: 14px; }
     .sync-pill {
       display: flex; align-items: center; gap: 5px;
-      background: rgba(255,255,255,.12);
-      border-radius: 99px; padding: 4px 10px;
-      font-size: 11px; color: rgba(255,255,255,.8);
-      flex-shrink: 0;
+      background: rgba(255,255,255,.12); border-radius: 99px;
+      padding: 4px 10px; font-size: 11px; color: rgba(255,255,255,.8); flex-shrink: 0;
     }
-    .sync-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #4ade80;
-      animation: blink 2s ease-in-out infinite;
-    }
+    .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; animation: blink 2s ease-in-out infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-    /* summary cards — only shown on FDR screen */
-    .summary-row {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-    }
-    .sum-card {
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.15);
-      border-radius: 10px; padding: 10px 12px;
-    }
+    .summary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .sum-card { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 10px 12px; }
     .sum-label { font-size: 10px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 3px; }
     .sum-value { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -.01em; }
     .sum-value .tk { font-size: 13px; font-weight: 500; margin-right: 1px; opacity: .8; }
 
-    /* back button */
     .back-btn {
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(255,255,255,.15); border: none; color: white;
@@ -88,93 +64,37 @@
     }
     .back-btn:active { background: rgba(255,255,255,.25); }
 
-    /* ── LAST SYNCED ── */
-    .last-sync {
-      text-align: center; font-size: 11px; color: var(--gray-400);
-      padding: 8px 0 4px;
-    }
+    .last-sync { text-align: center; font-size: 11px; color: var(--gray-400); padding: 8px 0 4px; }
 
-    /* ── HOME SCREEN ── */
-    .home-wrap {
-      padding: 24px 16px 40px;
-    }
-    .home-greeting {
-      font-size: 22px; font-weight: 700; color: var(--blue-dark);
-      margin-bottom: 6px;
-    }
-    .home-sub {
-      font-size: 14px; color: var(--gray-400); margin-bottom: 28px;
-    }
-    .home-grid {
-      display: flex; flex-direction: column; gap: 14px;
-    }
+    /* ── HOME ── */
+    .home-wrap { padding: 24px 16px 40px; }
+    .home-sub { font-size: 14px; color: var(--gray-400); margin-bottom: 28px; }
+    .home-grid { display: flex; flex-direction: column; gap: 14px; }
     .home-btn {
       display: flex; align-items: center; gap: 16px;
       background: white; border: 1.5px solid var(--gray-200);
-      border-radius: 16px; padding: 20px 18px;
-      cursor: pointer; text-align: left;
-      box-shadow: 0 1px 4px rgba(0,0,0,.06);
-      transition: border-color .15s, box-shadow .15s;
+      border-radius: 16px; padding: 20px 18px; cursor: pointer;
+      text-align: left; box-shadow: 0 1px 4px rgba(0,0,0,.06);
       -webkit-tap-highlight-color: transparent;
     }
-    .home-btn:active {
-      border-color: var(--blue-mid);
-      box-shadow: 0 2px 12px rgba(37,99,168,.15);
-    }
-    .home-btn-icon {
-      width: 52px; height: 52px; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 26px; flex-shrink: 0;
-    }
-    .home-btn-text {}
-    .home-btn-title {
-      font-size: 16px; font-weight: 700; color: var(--blue-dark);
-      margin-bottom: 3px; line-height: 1.2;
-    }
-    .home-btn-desc {
-      font-size: 12px; color: var(--gray-400); line-height: 1.3;
-    }
-    .home-btn-arrow {
-      margin-left: auto; font-size: 20px;
-      color: var(--gray-400); flex-shrink: 0;
-    }
+    .home-btn:active { border-color: var(--blue-mid); box-shadow: 0 2px 12px rgba(37,99,168,.15); }
+    .home-btn-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+    .home-btn-title { font-size: 16px; font-weight: 700; color: var(--blue-dark); margin-bottom: 3px; line-height: 1.2; }
+    .home-btn-desc { font-size: 12px; color: var(--gray-400); line-height: 1.3; }
+    .home-btn-arrow { margin-left: auto; font-size: 20px; color: var(--gray-400); flex-shrink: 0; }
+    .ic-fdr   { background: #dbeafe; }
+    .ic-kafco { background: #dcfce7; }
+    .ic-dps   { background: #fef9c3; }
+    .ic-padma { background: #fce7f3; }
+    .ic-bank  { background: #ede9fe; }
 
-    /* color accents per section */
-    .ic-fdr    { background: #dbeafe; }
-    .ic-kafco  { background: #dcfce7; }
-    .ic-dps    { background: #fef9c3; }
-    .ic-padma  { background: #fce7f3; }
-    .ic-bank   { background: #ede9fe; }
-
-    /* ── TABLE WRAPPER ── */
-    .table-wrap {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 12px 16px 32px;
-    }
-    table {
-      width: 100%; border-collapse: collapse;
-      background: white; border-radius: 12px; overflow: hidden;
-      box-shadow: 0 1px 6px rgba(0,0,0,.08);
-      font-size: 14px; min-width: 500px;
-    }
-    .row-title td {
-      background: var(--blue-dark); color: white;
-      text-align: center; font-size: 15px; font-weight: 700;
-      padding: 12px; letter-spacing: .04em;
-    }
-    thead tr:last-child th {
-      background: var(--blue-mid); color: white;
-      font-size: 12px; font-weight: 600; text-align: center;
-      padding: 10px 8px; border-right: 1px solid rgba(255,255,255,.15);
-      vertical-align: bottom; line-height: 1.35;
-    }
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 12px 16px 32px; }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,.08); font-size: 14px; min-width: 480px; }
+    .row-title td { background: var(--blue-dark); color: white; text-align: center; font-size: 15px; font-weight: 700; padding: 12px; letter-spacing: .04em; }
+    thead tr:last-child th { background: var(--blue-mid); color: white; font-size: 12px; font-weight: 600; text-align: center; padding: 10px 8px; border-right: 1px solid rgba(255,255,255,.15); vertical-align: bottom; line-height: 1.35; }
     thead tr:last-child th:last-child { border-right: none; }
-    tbody tr td {
-      padding: 10px 8px; border-bottom: 1px solid var(--gray-200);
-      border-right: 1px solid var(--gray-200);
-      text-align: center; vertical-align: middle; line-height: 1.3;
-    }
+    tbody tr td { padding: 10px 8px; border-bottom: 1px solid var(--gray-200); border-right: 1px solid var(--gray-200); text-align: center; vertical-align: middle; line-height: 1.3; }
     tbody tr td:last-child { border-right: none; }
     tbody tr td:first-child { font-weight: 600; }
     tbody tr.data-row:nth-child(odd)  td { background: var(--white); }
@@ -185,27 +105,17 @@
     tr.row-sonchoypotro td:first-child { font-weight: 600; }
     tr.row-nit td { background: var(--nit-bg) !important; font-weight: 700; font-size: 15px; border-top: 2px solid var(--blue-dark); color: var(--blue-dark); }
     .num { text-align: right !important; font-variant-numeric: tabular-nums; }
+    .plain { text-align: center !important; font-variant-numeric: normal !important; }
 
-    /* ── LOADING / ERROR ── */
-    .state-box {
-      text-align: center; padding: 60px 20px;
-      color: var(--gray-400); font-size: 15px;
-      background: white; margin: 16px; border-radius: 12px;
-    }
-    .spinner {
-      width: 32px; height: 32px;
-      border: 3px solid var(--gray-200); border-top-color: var(--blue-mid);
-      border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 14px;
-    }
+    /* ── STATE ── */
+    .state-box { text-align: center; padding: 60px 20px; color: var(--gray-400); font-size: 15px; background: white; margin: 16px; border-radius: 12px; }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--gray-200); border-top-color: var(--blue-mid); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 14px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* hide/show helpers */
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-<!-- ══ HEADER ══ -->
 <div class="header" id="app-header">
   <div class="header-top">
     <h1 id="header-title">📊 My Savings</h1>
@@ -227,12 +137,10 @@
 
 <div id="last-sync" class="last-sync"></div>
 
-<!-- ══ HOME SCREEN ══ -->
+<!-- HOME -->
 <div id="screen-home" class="home-wrap">
-  <div class="home-greeting">আসসালামু আলাইকুম 🌸</div>
   <div class="home-sub">What would you like to see today?</div>
   <div class="home-grid">
-
     <div class="home-btn" onclick="showSection('fdr')">
       <div class="home-btn-icon ic-fdr">📊</div>
       <div class="home-btn-text">
@@ -241,7 +149,6 @@
       </div>
       <div class="home-btn-arrow">›</div>
     </div>
-
     <div class="home-btn" onclick="showSection('kafco')">
       <div class="home-btn-icon ic-kafco">💰</div>
       <div class="home-btn-text">
@@ -250,7 +157,6 @@
       </div>
       <div class="home-btn-arrow">›</div>
     </div>
-
     <div class="home-btn" onclick="showSection('dps')">
       <div class="home-btn-icon ic-dps">🏦</div>
       <div class="home-btn-text">
@@ -259,7 +165,6 @@
       </div>
       <div class="home-btn-arrow">›</div>
     </div>
-
     <div class="home-btn" onclick="showSection('padma')">
       <div class="home-btn-icon ic-padma">🌸</div>
       <div class="home-btn-text">
@@ -268,7 +173,6 @@
       </div>
       <div class="home-btn-arrow">›</div>
     </div>
-
     <div class="home-btn" onclick="showSection('bank')">
       <div class="home-btn-icon ic-bank">🏛️</div>
       <div class="home-btn-text">
@@ -277,11 +181,9 @@
       </div>
       <div class="home-btn-arrow">›</div>
     </div>
-
   </div>
 </div>
 
-<!-- ══ SECTION SCREENS ══ -->
 <div id="screen-fdr"   class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
 <div id="screen-kafco" class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
 <div id="screen-dps"   class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
@@ -290,12 +192,11 @@
 
 <script>
 // ══════════════════════════════════════════════════
-// ★ CONFIG — paste your Sheet ID once here ★
+// ★ ONLY THING YOU NEED TO FILL IN ★
 // ══════════════════════════════════════════════════
 const SHEET_ID = "1yO68AOIsJoX-ffWX7d4XqBTNODaw_mQZNtAYdBu662c";
-// e.g. "1aBcDeFgHiJkLmNoPqRsTuVwXy"
 
-// Tab names (exact, case-sensitive)
+// Tab names — exact, case-sensitive
 const TABS = {
   fdr:   "new fdrs",
   kafco: "MISC",
@@ -304,31 +205,38 @@ const TABS = {
   bank:  "baba",
 };
 
-// Cell ranges per section (null = whole sheet)
+// Cell ranges
 const RANGES = {
-  fdr:   "A1:J15",
+  fdr:   "A1:J100",  // wide enough to handle new rows you add — totals always come from last row
   kafco: "D3:E15",
   dps:   "A22:G29",
   padma: "I23:K28",
-  bank:  "A13:E19",
+  bank:  "A13:D19",
 };
 
-const REFRESH_MS = 300_000;
+const REFRESH_MS = 300_000; // 5 minutes
 
-// FDR columns (after removing cols 7&8: Interest before tax, Interest after tax ded.)
-// Remaining: Bank, Date, Principal, Rate, Duration, Interest Input, Monthly Before Tax, Monthly After Tax
-const FDR_HEADERS = [
-  "Bank","Date","Principal\nAmount","Interest\nRate","Duration\n(Months)",
-  "Interest\nInput","Monthly Interest\nBefore Tax","Monthly Interest\nAfter Tax"
-];
-const FDR_NUM_COLS = new Set([2,6,7]);
-// original col indices to KEEP (drop original 6 & 7 = before tax, after tax ded.)
-const FDR_KEEP = [0,1,2,3,4,5,8,9];
+// FDR: remove original cols 6 & 7 (Interest before tax, Interest after tax ded.)
+// Keep: 0=Bank, 1=Date, 2=Principal, 3=Rate, 4=Duration, 5=Interest Input, 8=Monthly Before, 9=Monthly After
+const FDR_KEEP    = [0,1,2,3,4,5,8,9];
+const FDR_HEADERS = ["Bank","Date","Principal\nAmount","Interest\nRate","Duration\n(Months)","Interest\nInput","Monthly Interest\nBefore Tax","Monthly Interest\nAfter Tax"];
+const FDR_NUM_COLS = new Set([2,6,7]); // indices in the NEW (kept) column order
 
-// ══ CSV helpers ══════════════════════════════════
+// DPS: columns that are account numbers (plain text, not formatted as money)
+// In range A22:G29, col index 2 = C = account number
+const DPS_PLAIN_COLS = new Set([2]);
+// DPS: columns that are dates — show raw string as-is
+const DPS_DATE_COLS  = new Set([4,5]);
+// DPS: money columns
+const DPS_NUM_COLS   = new Set([3,6]);
+
+// PADMA: all columns shown as plain text (contains dates, mixed data)
+// We'll detect money vs text per cell rather than by column
+
+// ══ Helpers ══════════════════════════════════════
 function csvUrl(tab, range) {
   let url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
-  if (range) url += `&range=${range}`;
+  if (range) url += `&range=${encodeURIComponent(range)}`;
   return url;
 }
 
@@ -355,7 +263,7 @@ function cleanNum(s) {
 function fmtNum(s) {
   const n = cleanNum(s);
   if (n === 0 && !String(s||"").match(/\d/)) return s || "—";
-  return n.toLocaleString("en-IN",{minimumFractionDigits:0,maximumFractionDigits:2});
+  return n.toLocaleString("en-IN",{minimumFractionDigits:0, maximumFractionDigits:2});
 }
 function fmtSummary(n) {
   if (n >= 1e7) return (n/1e7).toFixed(2)+" Cr";
@@ -363,72 +271,63 @@ function fmtSummary(n) {
   return n.toLocaleString("en-IN",{maximumFractionDigits:0});
 }
 
-// ══ Generic table builder ════════════════════════
-function buildTable(rows, title, numColSet) {
-  if (!rows || rows.length < 1) return "<div class='state-box'>No data found.</div>";
-  const wrap = document.createElement("div");
-  wrap.className = "table-wrap";
-  const tbl = document.createElement("table");
-  const headerRow = rows[0];
-  const colCount = headerRow.length;
-  tbl.innerHTML = `<thead>
-    <tr class="row-title"><td colspan="${colCount}">${title}</td></tr>
-    <tr>${headerRow.map(h=>`<th>${h}</th>`).join("")}</tr>
-  </thead><tbody></tbody>`;
-  const tbody = tbl.querySelector("tbody");
-  for (const r of rows.slice(1)) {
-    if (r.every(c=>!c)) continue; // skip blank rows
-    const tr = document.createElement("tr");
-    tr.className = "data-row";
-    for (let i=0;i<colCount;i++) {
-      const td = document.createElement("td");
-      const val = r[i]||"";
-      if (numColSet && numColSet.has(i)) { td.className="num"; td.textContent=fmtNum(val); }
-      else td.textContent = val||"—";
-      tr.appendChild(td);
-    }
-    tbody.appendChild(tr);
-  }
-  wrap.appendChild(tbl);
-  return wrap;
+// Convert Google Sheets serial date number to DD-MMM-YY string
+function serialToDate(serial) {
+  const n = parseInt(serial);
+  if (isNaN(n) || n < 1) return serial;
+  // Google Sheets epoch: Dec 30 1899
+  const d = new Date((n - 1) * 86400000 + new Date('1899-12-31').getTime());
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const day = String(d.getUTCDate()).padStart(2,'0');
+  const mon = months[d.getUTCMonth()];
+  const yr  = String(d.getUTCFullYear()).slice(-2);
+  return `${day}-${mon}-${yr}`;
+}
+
+// Decide if a string looks like a date serial (pure integer, plausible range)
+function isDateSerial(s) {
+  const n = Number(s);
+  return Number.isInteger(n) && n > 30000 && n < 60000; // covers ~1982–2064
 }
 
 // ══ FDR render ═══════════════════════════════════
 function renderFDR(rows) {
-  localStorage.setItem("fdr_cache", JSON.stringify(rows));
+  localStorage.setItem("cache_fdr", JSON.stringify(rows));
 
-  const dataRows = rows.slice(1);
+  // Find last non-empty row — that's the TOTAL row with C & J values
+  let lastRow = null;
+  for (let i = rows.length - 1; i >= 1; i--) {
+    if (rows[i].some(c => c)) { lastRow = rows[i]; break; }
+  }
+
+  // Pull totals from last row col 2 (C) and col 9 (J)
+  const totalPrincipal = lastRow ? cleanNum(lastRow[2]) : 0;
+  const totalMonthly   = lastRow ? cleanNum(lastRow[9]) : 0;
+
+  document.getElementById("s-principal").textContent = fmtSummary(totalPrincipal);
+  document.getElementById("s-monthly").textContent   = fmtSummary(totalMonthly);
+
+  // Build table — all rows except header, skip fully blank rows
+  const dataRows = rows.slice(1).filter(r => r.some(c => c));
 
   function rowType(r) {
     const b = (r[0]||"").trim().toLowerCase();
-    if (b.includes("nit")) return "nit";
-    if (b.includes("total")) return "total";
+    if (b.includes("nit"))     return "nit";
+    if (b.includes("total"))   return "total";
     if (b.includes("sonchoy")||b.includes("sanchay")||b==="sonchoypotro") return "sonchoypotro";
     return "data";
   }
 
-  // Summaries — sum everything
-  let totalPrincipal=0, totalMonthly=0;
-  for (const r of dataRows) {
-    totalPrincipal += cleanNum(r[2]);
-    totalMonthly   += cleanNum(r[9]);
-  }
-  document.getElementById("s-principal").textContent = fmtSummary(totalPrincipal);
-  document.getElementById("s-monthly").textContent   = fmtSummary(totalMonthly);
-
-  // Build table with columns 7&8 removed
   const wrap = document.createElement("div");
   wrap.className = "table-wrap";
   const tbl = document.createElement("table");
-  const colCount = FDR_HEADERS.length;
   tbl.innerHTML = `<thead>
-    <tr class="row-title"><td colspan="${colCount}">FDR'S</td></tr>
+    <tr class="row-title"><td colspan="${FDR_HEADERS.length}">FDR'S</td></tr>
     <tr>${FDR_HEADERS.map(h=>`<th>${h.replace(/\n/g,"<br>")}</th>`).join("")}</tr>
   </thead><tbody></tbody>`;
   const tbody = tbl.querySelector("tbody");
 
   for (const r of dataRows) {
-    if (r.every(c=>!c)) continue;
     const type = rowType(r);
     const tr = document.createElement("tr");
     tr.className = type==="data"?"data-row":type==="total"?"row-total":type==="sonchoypotro"?"row-sonchoypotro":"row-nit";
@@ -442,21 +341,126 @@ function renderFDR(rows) {
     tbody.appendChild(tr);
   }
   wrap.appendChild(tbl);
-
   const screen = document.getElementById("screen-fdr");
-  screen.innerHTML="";
-  screen.appendChild(wrap);
+  screen.innerHTML=""; screen.appendChild(wrap);
+}
+
+// ══ DPS render ═══════════════════════════════════
+function renderDPS(rows) {
+  localStorage.setItem("cache_dps", JSON.stringify(rows));
+  if (!rows || rows.length < 1) { document.getElementById("screen-dps").innerHTML="<div class='state-box'>No data.</div>"; return; }
+
+  const wrap = document.createElement("div"); wrap.className="table-wrap";
+  const tbl  = document.createElement("table");
+  const headerRow = rows[0]; const colCount = headerRow.length;
+  tbl.innerHTML = `<thead>
+    <tr class="row-title"><td colspan="${colCount}">RUNNING DPS</td></tr>
+    <tr>${headerRow.map(h=>`<th>${h||""}</th>`).join("")}</tr>
+  </thead><tbody></tbody>`;
+  const tbody = tbl.querySelector("tbody");
+
+  for (const r of rows.slice(1)) {
+    if (r.every(c=>!c)) continue;
+    const tr = document.createElement("tr"); tr.className="data-row";
+    for (let i=0; i<colCount; i++) {
+      const td = document.createElement("td");
+      let val = r[i]||"";
+
+      if (DPS_PLAIN_COLS.has(i)) {
+        // Account number — show exactly as-is, no formatting
+        td.className = "plain";
+        td.textContent = val || "—";
+      } else if (DPS_DATE_COLS.has(i)) {
+        // Date column — convert serial if needed, else show as-is
+        td.className = "plain";
+        td.textContent = val ? (isDateSerial(val) ? serialToDate(val) : val) : "—";
+      } else if (DPS_NUM_COLS.has(i)) {
+        td.className = "num";
+        td.textContent = val ? fmtNum(val) : "—";
+      } else {
+        td.textContent = val || "—";
+      }
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+  wrap.appendChild(tbl);
+  const screen = document.getElementById("screen-dps");
+  screen.innerHTML=""; screen.appendChild(wrap);
+}
+
+// ══ PADMA render ═════════════════════════════════
+function renderPadma(rows) {
+  localStorage.setItem("cache_padma", JSON.stringify(rows));
+  if (!rows || rows.length < 1) { document.getElementById("screen-padma").innerHTML="<div class='state-box'>No data.</div>"; return; }
+
+  const wrap = document.createElement("div"); wrap.className="table-wrap";
+  const tbl  = document.createElement("table");
+  const headerRow = rows[0]; const colCount = headerRow.length;
+  tbl.innerHTML = `<thead>
+    <tr class="row-title"><td colspan="${colCount}">PADMA BANK TENURE</td></tr>
+    <tr>${headerRow.map(h=>`<th>${h||""}</th>`).join("")}</tr>
+  </thead><tbody></tbody>`;
+  const tbody = tbl.querySelector("tbody");
+
+  for (const r of rows.slice(1)) {
+    if (r.every(c=>!c)) continue;
+    const tr = document.createElement("tr"); tr.className="data-row";
+    for (let i=0; i<colCount; i++) {
+      const td = document.createElement("td");
+      let val = r[i]||"";
+      // Convert any date serials, leave everything else as-is
+      if (val && isDateSerial(val)) {
+        td.className = "plain";
+        td.textContent = serialToDate(val);
+      } else {
+        td.textContent = val || "—";
+      }
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+  wrap.appendChild(tbl);
+  const screen = document.getElementById("screen-padma");
+  screen.innerHTML=""; screen.appendChild(wrap);
+}
+
+// ══ Generic table (KAFCO, Bank) ══════════════════
+function buildTable(rows, title, numColSet, sectionId) {
+  localStorage.setItem("cache_"+sectionId, JSON.stringify(rows));
+  if (!rows || rows.length < 1) return "<div class='state-box'>No data found.</div>";
+  const wrap = document.createElement("div"); wrap.className="table-wrap";
+  const tbl  = document.createElement("table");
+  const headerRow = rows[0]; const colCount = headerRow.length;
+  tbl.innerHTML = `<thead>
+    <tr class="row-title"><td colspan="${colCount}">${title}</td></tr>
+    <tr>${headerRow.map(h=>`<th>${h||""}</th>`).join("")}</tr>
+  </thead><tbody></tbody>`;
+  const tbody = tbl.querySelector("tbody");
+  for (const r of rows.slice(1)) {
+    if (r.every(c=>!c)) continue;
+    const tr = document.createElement("tr"); tr.className="data-row";
+    for (let i=0; i<colCount; i++) {
+      const td = document.createElement("td");
+      const val = r[i]||"";
+      if (numColSet && numColSet.has(i)) { td.className="num"; td.textContent=fmtNum(val); }
+      else { td.textContent = val||"—"; }
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+  wrap.appendChild(tbl);
+  return wrap;
 }
 
 // ══ Navigation ═══════════════════════════════════
 const SECTION_META = {
-  fdr:   { title:"📊 FDR's",               sub:"Fixed deposits & monthly income" },
-  kafco: { title:"💰 Funds from KAFCO",     sub:"Large funds received" },
-  dps:   { title:"🏦 Running DPS",          sub:"Active DPS accounts" },
-  padma: { title:"🌸 Padma Bank Tenure",    sub:"Padma Bank FDR details" },
-  bank:  { title:"🏛️ Bank Accounts",        sub:"Geetasree Halder" },
+  fdr:   { title:"📊 FDR's" },
+  kafco: { title:"💰 Funds from KAFCO" },
+  dps:   { title:"🏦 Running DPS" },
+  padma: { title:"🌸 Padma Bank Tenure" },
+  bank:  { title:"🏛️ Bank Accounts" },
 };
-
 let currentSection = null;
 
 function showHome() {
@@ -473,56 +477,42 @@ function showHome() {
 function showSection(name) {
   currentSection = name;
   document.getElementById("screen-home").classList.add("hidden");
-  ["fdr","kafco","dps","padma","bank"].forEach(s=>{
-    document.getElementById("screen-"+s).classList.toggle("hidden", s!==name);
-  });
-  const meta = SECTION_META[name];
-  document.getElementById("header-title").textContent = meta.title;
+  ["fdr","kafco","dps","padma","bank"].forEach(s=>
+    document.getElementById("screen-"+s).classList.toggle("hidden", s!==name));
+  document.getElementById("header-title").textContent = SECTION_META[name].title;
   document.getElementById("header-sub").classList.add("hidden");
   document.getElementById("back-btn").classList.remove("hidden");
   document.getElementById("fdr-summary").classList.toggle("hidden", name!=="fdr");
   loadSection(name);
 }
 
-// ══ Data loading ══════════════════════════════════
-const sectionLoaded = {};
-
+// ══ Load ═════════════════════════════════════════
 async function loadSection(name) {
   if (SHEET_ID === "YOUR_SHEET_ID_HERE") {
-    document.getElementById("screen-"+name).innerHTML=`
-      <div class='state-box'><div style='font-size:32px;margin-bottom:12px'>⚙️</div>
-      <strong>Setup needed</strong><br><br>Paste your Sheet ID into the SHEET_ID variable in the code.</div>`;
+    document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:32px;margin-bottom:12px'>⚙️</div><strong>Setup needed</strong><br><br>Paste your Sheet ID into the SHEET_ID variable.</div>`;
     return;
   }
-
-  const tab = TABS[name];
-  const range = RANGES[name];
-  const url = csvUrl(tab, range) + "&t=" + Date.now();
-
+  const url = csvUrl(TABS[name], RANGES[name]) + "&t=" + Date.now();
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error("HTTP "+res.status);
-    const text = await res.text();
-    const rows = parseCSV(text);
+    const rows = parseCSV(await res.text());
 
-    // Cache it
-    localStorage.setItem("cache_"+name, JSON.stringify(rows));
-    sectionLoaded[name] = true;
-
-    if (name === "fdr") {
-      renderFDR(rows);
-    } else {
-      const titles = {
-        kafco:"BIG FUNDS RECEIVED FROM KAFCO",
-        dps:"RUNNING DPS",
-        padma:"PADMA BANK TENURE",
-        bank:"BANK ACCOUNTS — GEETASREE HALDER"
-      };
-      const el = document.getElementById("screen-"+name);
-      el.innerHTML = "";
-      const built = buildTable(rows, titles[name], new Set([1,2,3,4,5,6]));
-      if (typeof built === "string") el.innerHTML = built;
-      else el.appendChild(built);
+    if      (name==="fdr")   renderFDR(rows);
+    else if (name==="dps")   renderDPS(rows);
+    else if (name==="padma") renderPadma(rows);
+    else if (name==="kafco") {
+      // KAFCO: col 1 is amount — center aligned (no num class), col 0 is label
+      const el = document.getElementById("screen-kafco");
+      el.innerHTML="";
+      const built = buildTable(rows, "BIG FUNDS RECEIVED FROM KAFCO", new Set(), "kafco");
+      typeof built==="string" ? el.innerHTML=built : el.appendChild(built);
+    }
+    else if (name==="bank") {
+      const el = document.getElementById("screen-bank");
+      el.innerHTML="";
+      const built = buildTable(rows, "BANK ACCOUNTS — GEETASREE HALDER", new Set([1,2,3]), "bank");
+      typeof built==="string" ? el.innerHTML=built : el.appendChild(built);
     }
 
     document.getElementById("last-sync").textContent =
@@ -530,33 +520,22 @@ async function loadSection(name) {
 
   } catch(e) {
     console.error(e);
-    // Try cache
     const cached = localStorage.getItem("cache_"+name);
     if (cached) {
       const rows = JSON.parse(cached);
-      if (name==="fdr") renderFDR(rows);
-      else {
-        const titles={kafco:"BIG FUNDS RECEIVED FROM KAFCO",dps:"RUNNING DPS",padma:"PADMA BANK TENURE",bank:"BANK ACCOUNTS — GEETASREE HALDER"};
-        const el=document.getElementById("screen-"+name);
-        el.innerHTML="";
-        const built=buildTable(rows,titles[name],new Set([1,2,3,4,5,6]));
-        if(typeof built==="string")el.innerHTML=built; else el.appendChild(built);
-      }
-      document.getElementById("last-sync").textContent =
-        "Offline — showing last saved data";
+      if      (name==="fdr")   renderFDR(rows);
+      else if (name==="dps")   renderDPS(rows);
+      else if (name==="padma") renderPadma(rows);
+      else if (name==="kafco") { const el=document.getElementById("screen-kafco"); el.innerHTML=""; const b=buildTable(rows,"BIG FUNDS RECEIVED FROM KAFCO",new Set(),"kafco"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
+      else if (name==="bank")  { const el=document.getElementById("screen-bank");  el.innerHTML=""; const b=buildTable(rows,"BANK ACCOUNTS — GEETASREE HALDER",new Set([1,2,3]),"bank"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
+      document.getElementById("last-sync").textContent = "Offline — showing last saved data";
     } else {
-      document.getElementById("screen-"+name).innerHTML=`
-        <div class='state-box'><div style='font-size:32px;margin-bottom:12px'>⚠️</div>
-        <strong>Could not load data</strong><br><br>${e.message}<br><br>
-        Make sure the sheet is <strong>publicly shared</strong>.</div>`;
+      document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:32px;margin-bottom:12px'>⚠️</div><strong>Could not load data</strong><br><br>${e.message}<br><br>Make sure the sheet is <strong>publicly shared</strong>.</div>`;
     }
   }
 }
 
-// Auto-refresh current section every 5 minutes
 setInterval(()=>{ if(currentSection) loadSection(currentSection); }, REFRESH_MS);
-
-// Start on home
 showHome();
 </script>
 </body>
