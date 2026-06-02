@@ -2,369 +2,266 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0f2a1e" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1a3a5c" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="My Savings" />
-  <title>My Savings Dashboard</title>
-
+  <meta name="apple-mobile-web-app-title" content="FDR Dashboard" />
+  <title>FDR Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    /* ── TOKENS ─────────────────────────────────────────── */
     :root {
-      --bg:          #0b1f15;
-      --bg2:         #112b1c;
-      --card:        #163523;
-      --card2:       #1c4229;
-      --accent:      #b5e48c;
-      --accent2:     #74c69d;
-      --gold:        #f4c542;
-      --text:        #e8f5e2;
-      --text-muted:  #7dab88;
-      --border:      rgba(181,228,140,0.12);
-      --shadow:      0 8px 40px rgba(0,0,0,0.45);
-      --radius:      18px;
-      --radius-sm:   10px;
+      --blue-dark:  #1a3a5c;
+      --blue-mid:   #2563a8;
+      --blue-light: #dbeafe;
+      --blue-pale:  #eff6ff;
+      --total-bg:   #bfdbfe;
+      --nit-bg:     #93c5fd;
+      --white:      #ffffff;
+      --gray-50:    #f8fafc;
+      --gray-100:   #f1f5f9;
+      --gray-200:   #e2e8f0;
+      --gray-400:   #94a3b8;
+      --gray-600:   #475569;
+      --gray-800:   #1e293b;
+      --text:       #0f172a;
+      --green:      #166534;
+      --green-bg:   #dcfce7;
     }
 
-    /* ── RESET ──────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-text-size-adjust: 100%; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+
     body {
-      background: var(--bg);
+      font-family: 'Inter', 'Noto Sans Bengali', sans-serif;
+      background: var(--gray-100);
       color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 400;
       min-height: 100dvh;
-      overflow-x: hidden;
-      padding-bottom: env(safe-area-inset-bottom, 20px);
+      -webkit-text-size-adjust: 100%;
     }
 
-    /* ── BACKGROUND MESH ────────────────────────────────── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0;
-      background:
-        radial-gradient(ellipse 70% 50% at 20% 10%, rgba(116,198,157,0.13) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 85% 80%, rgba(181,228,140,0.08) 0%, transparent 55%);
-      pointer-events: none;
+    /* ── HEADER ── */
+    .header {
+      background: var(--blue-dark);
+      color: white;
+      padding: 20px 16px 16px;
+      position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
     }
-
-    /* ── LAYOUT ─────────────────────────────────────────── */
-    .page { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 0 16px 40px; }
-
-    /* ── HEADER ─────────────────────────────────────────── */
-    header {
-      padding: 52px 4px 28px;
-      display: flex; align-items: flex-start; justify-content: space-between;
-    }
-    .header-text {}
-    .greeting {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px; font-weight: 400;
-      color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 30px; font-weight: 700;
-      color: var(--text); line-height: 1.15;
-    }
-    h1 span { color: var(--accent); }
-
-    .sync-badge {
-      display: flex; align-items: center; gap: 6px;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 99px; padding: 6px 12px;
-      font-size: 12px; color: var(--text-muted);
-      white-space: nowrap; flex-shrink: 0; margin-top: 6px;
-    }
-    .sync-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--accent2);
-      animation: pulse-dot 2.4s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50%      { opacity: .5; transform: scale(.7); }
-    }
-
-    /* ── SCORECARDS ─────────────────────────────────────── */
-    .scorecards {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-      margin-bottom: 28px;
-    }
-    .scorecard {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 22px 18px 20px;
-      position: relative; overflow: hidden;
-      animation: fade-up .5s ease both;
-    }
-    .scorecard:nth-child(2) { animation-delay: .1s; }
-    .scorecard::after {
-      content: '';
-      position: absolute; top: -30px; right: -30px;
-      width: 90px; height: 90px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(181,228,140,.1) 0%, transparent 70%);
-    }
-    .scorecard.gold::after {
-      background: radial-gradient(circle, rgba(244,197,66,.12) 0%, transparent 70%);
-    }
-    .sc-label {
-      font-size: 11px; font-weight: 500; letter-spacing: .07em;
-      text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px;
-      line-height: 1.4;
-    }
-    .sc-value {
-      font-family: 'Playfair Display', serif;
-      font-size: 26px; font-weight: 700;
-      color: var(--accent); line-height: 1;
-    }
-    .scorecard.gold .sc-value { color: var(--gold); }
-    .sc-currency {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px; font-weight: 500;
-      color: var(--text-muted); margin-bottom: 3px;
-    }
-
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── SECTION TITLE ──────────────────────────────────── */
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 20px; font-weight: 500;
-      color: var(--text); margin-bottom: 16px;
-      padding-left: 2px;
-    }
-    .section-title small {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px; font-weight: 400;
-      color: var(--text-muted); margin-left: 8px;
-    }
-
-    /* ── BANK GROUP ─────────────────────────────────────── */
-    .bank-group { margin-bottom: 24px; animation: fade-up .5s ease both; }
-    .bank-group:nth-child(2) { animation-delay: .05s; }
-    .bank-group:nth-child(3) { animation-delay: .10s; }
-    .bank-group:nth-child(4) { animation-delay: .15s; }
-
-    .bank-header {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 10px; padding: 0 2px;
-    }
-    .bank-icon {
-      width: 34px; height: 34px; border-radius: 10px;
-      background: var(--card2); display: flex; align-items: center; justify-content: center;
-      font-size: 16px; flex-shrink: 0;
-    }
-    .bank-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 17px; font-weight: 500; color: var(--text);
-    }
-    .bank-count {
-      margin-left: auto;
-      font-size: 11px; color: var(--text-muted);
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 99px; padding: 2px 10px;
-    }
-
-    /* ── FDR CARD ───────────────────────────────────────── */
-    .fdr-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 18px 16px;
-      margin-bottom: 10px;
-      transition: border-color .2s;
-    }
-    .fdr-card:active { border-color: rgba(181,228,140,.35); }
-
-    .fdr-top {
-      display: flex; align-items: flex-start; justify-content: space-between;
+    .header-top {
+      display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 14px;
     }
-    .fdr-date {
-      font-size: 12px; color: var(--text-muted); margin-bottom: 4px;
+    .header h1 {
+      font-size: 20px; font-weight: 700; letter-spacing: .01em;
     }
-    .fdr-principal {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px; font-weight: 700; color: var(--text);
+    .sync-pill {
+      display: flex; align-items: center; gap: 5px;
+      background: rgba(255,255,255,.12);
+      border-radius: 99px; padding: 4px 10px;
+      font-size: 11px; color: rgba(255,255,255,.8);
     }
-    .fdr-rate-badge {
-      background: rgba(181,228,140,.12);
-      border: 1px solid rgba(181,228,140,.2);
-      color: var(--accent);
-      font-size: 13px; font-weight: 500;
-      border-radius: 8px; padding: 4px 10px;
-      white-space: nowrap; flex-shrink: 0;
+    .sync-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #4ade80;
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* ── SUMMARY PILLS ── */
+    .summary-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    }
+    .sum-card {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 10px; padding: 10px 12px;
+    }
+    .sum-label {
+      font-size: 10px; font-weight: 500; letter-spacing: .05em;
+      text-transform: uppercase; color: rgba(255,255,255,.6);
+      margin-bottom: 3px;
+    }
+    .sum-value {
+      font-size: 17px; font-weight: 700; color: #fff;
+      letter-spacing: -.01em;
+    }
+    .sum-value .tk { font-size: 13px; font-weight: 500; margin-right: 1px; opacity: .8; }
+
+    /* ── LAST SYNCED ── */
+    .last-sync {
+      text-align: center;
+      font-size: 11px; color: var(--gray-400);
+      padding: 8px 0 4px;
     }
 
-    .fdr-divider {
-      height: 1px; background: var(--border); margin-bottom: 14px;
+    /* ── TABLE WRAPPER ── */
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px 16px 32px;
     }
 
-    .fdr-stats {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 6px rgba(0,0,0,.08);
+      font-size: 14px;
+      min-width: 700px;  /* allows horizontal scroll on small screens */
     }
-    .stat { }
-    .stat-label {
-      font-size: 10px; font-weight: 500; letter-spacing: .06em;
-      text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px;
-    }
-    .stat-value {
-      font-size: 15px; font-weight: 500; color: var(--text);
-    }
-    .stat-value.highlight { color: var(--accent2); }
-    .stat-value.gold { color: var(--gold); }
 
-    /* ── LOADING / ERROR ─────────────────────────────────── */
+    /* Title row */
+    .row-title td {
+      background: var(--blue-dark);
+      color: white;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 13px;
+      letter-spacing: .04em;
+    }
+
+    /* Header row */
+    thead tr:last-child th {
+      background: var(--blue-mid);
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      padding: 10px 8px;
+      border-right: 1px solid rgba(255,255,255,.15);
+      vertical-align: bottom;
+      line-height: 1.35;
+    }
+    thead tr:last-child th:last-child { border-right: none; }
+
+    /* Body rows */
+    tbody tr td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--gray-200);
+      border-right: 1px solid var(--gray-200);
+      text-align: center;
+      vertical-align: middle;
+      line-height: 1.3;
+    }
+    tbody tr td:last-child { border-right: none; }
+    tbody tr td:first-child { font-weight: 600; text-align: center; }
+
+    /* Alternating rows */
+    tbody tr.data-row:nth-child(odd)  td { background: var(--white); }
+    tbody tr.data-row:nth-child(even) td { background: var(--blue-pale); }
+
+    /* Hover */
+    tbody tr.data-row:hover td { background: var(--blue-light) !important; }
+
+    /* TOTAL row */
+    tr.row-total td {
+      background: var(--total-bg) !important;
+      font-weight: 700;
+      font-size: 14px;
+      border-top: 2px solid var(--blue-mid);
+    }
+
+    /* Sonchoypotro row — slightly different shade */
+    tr.row-sonchoypotro td {
+      background: var(--gray-100) !important;
+      font-style: italic;
+    }
+    tr.row-sonchoypotro td:first-child { font-style: normal; font-weight: 600; }
+
+    /* NIT TOTAL row */
+    tr.row-nit td {
+      background: var(--nit-bg) !important;
+      font-weight: 700;
+      font-size: 15px;
+      border-top: 2px solid var(--blue-dark);
+      color: var(--blue-dark);
+    }
+
+    /* number columns right-align */
+    .num { text-align: right !important; font-variant-numeric: tabular-nums; }
+
+    /* ── LOADING / ERROR ── */
     .state-box {
       text-align: center; padding: 60px 20px;
-      color: var(--text-muted); font-size: 15px;
+      color: var(--gray-400); font-size: 15px;
+      background: white; margin: 16px; border-radius: 12px;
     }
     .spinner {
-      width: 36px; height: 36px; border: 3px solid var(--border);
-      border-top-color: var(--accent2); border-radius: 50%;
-      animation: spin .9s linear infinite; margin: 0 auto 16px;
+      width: 32px; height: 32px;
+      border: 3px solid var(--gray-200);
+      border-top-color: var(--blue-mid);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 14px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    .error-icon { font-size: 36px; margin-bottom: 12px; }
-
-    /* ── FOOTER ─────────────────────────────────────────── */
-    footer {
-      text-align: center; padding-top: 32px;
-      font-size: 11px; color: var(--text-muted); opacity: .5;
-    }
-
-    /* ── LAST UPDATED ────────────────────────────────────── */
-    .last-updated {
-      text-align: center; font-size: 11px; color: var(--text-muted);
-      margin-bottom: 24px; letter-spacing: .04em;
-    }
   </style>
 </head>
 <body>
-<div class="page">
 
-  <header>
-    <div class="header-text">
-      <div class="greeting">Your portfolio</div>
-      <h1>Savings &amp;<br><span>Investments</span></h1>
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <h1>📊 FDR's</h1>
+    <div class="sync-pill"><div class="sync-dot"></div> Live</div>
+  </div>
+  <div class="summary-row">
+    <div class="sum-card">
+      <div class="sum-label">Total Principal</div>
+      <div class="sum-value"><span class="tk">৳</span><span id="s-principal">—</span></div>
     </div>
-    <div class="sync-badge">
-      <div class="sync-dot"></div>
-      Live
-    </div>
-  </header>
-
-  <!-- Scorecards -->
-  <div class="scorecards">
-    <div class="scorecard" id="card-principal">
-      <div class="sc-label">Total Principal</div>
-      <div class="sc-currency">BDT ৳</div>
-      <div class="sc-value" id="total-principal">—</div>
-    </div>
-    <div class="scorecard gold" id="card-income">
-      <div class="sc-label">Monthly Income After Tax</div>
-      <div class="sc-currency">BDT ৳</div>
-      <div class="sc-value" id="total-monthly">—</div>
+    <div class="sum-card">
+      <div class="sum-label">Monthly Income (After Tax)</div>
+      <div class="sum-value"><span class="tk">৳</span><span id="s-monthly">—</span></div>
     </div>
   </div>
+</div>
 
-  <div id="last-updated" class="last-updated"></div>
+<div id="last-sync" class="last-sync"></div>
 
-  <!-- Investment breakdown -->
-  <div class="section-title">Investments <small id="inv-count"></small></div>
-  <div id="investments-container">
-    <div class="state-box">
-      <div class="spinner"></div>
-      Loading your data…
-    </div>
-  </div>
-
-  <footer>Read-only · Updates automatically</footer>
+<!-- TABLE or STATE -->
+<div id="root">
+  <div class="state-box"><div class="spinner"></div>Loading your data…</div>
 </div>
 
 <script>
 // ─────────────────────────────────────────────────────────
 // ★ PASTE YOUR GOOGLE SHEET CSV URL BELOW ★
-// See the setup guide in the README / comments below.
-// Example:
-// const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/gviz/tq?tqx=out:csv&sheet=YOUR_TAB_NAME";
+// Format: https://docs.google.com/spreadsheets/d/YOUR_ID/gviz/tq?tqx=out:csv&sheet=YOUR_TAB_NAME
 // ─────────────────────────────────────────────────────────
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1yO68AOIsJoX-ffWX7d4XqBTNODaw_mQZNtAYdBu662c/gviz/tq?tqx=out:csv&sheet=APP_FDR";
 
-// How often to refresh (milliseconds). 60000 = every 1 minute.
-const REFRESH_INTERVAL = 60_000;
+const REFRESH_MS = 60_000; // refresh every 60 seconds
 
-// ─── Column indices (0-based) matching your header order ─
-// [Bank][Date][Principal amount][Interest rate][Duration (Months)]
-// [Interest Input][Interest before tax][Interest after tax deduction (10%)]
-// [Monthly interest amount before tax][Monthly interest amount after tax]
-const COL = {
-  bank:         0,
-  date:         1,
-  principal:    2,
-  rate:         3,
-  duration:     4,
-  interestIn:   5,
-  beforeTax:    6,
-  afterTax:     7,
-  monthlyBefore:8,
-  monthlyAfter: 9,
+// Column indices (0-based) — must match your sheet header order exactly
+const C = {
+  bank:0, date:1, principal:2, rate:3, duration:4,
+  input:5, beforeTax:6, afterTax:7, monthlyBefore:8, monthlyAfter:9
 };
 
-// Bank emoji map — add your banks here for a fun icon
-const BANK_ICONS = {
-  default: "🏦",
-  "dutch bangla": "🟢",
-  "dbbl": "🟢",
-  "islami": "☪️",
-  "ibbl": "☪️",
-  "brac": "🔵",
-  "standard": "⭐",
-  "city": "🏙️",
-  "sonali": "🌟",
-  "agrani": "🌿",
-  "pubali": "🔶",
-  "trust": "🔐",
-  "exim": "🌐",
-  "prime": "💎",
-  "mutual trust": "🤝",
-  "mtb": "🤝",
-};
+const HEADERS = [
+  "Bank","Date","Principal\nAmount","Interest\nRate","Duration\n(Months)",
+  "Interest\nInput","Interest\nBefore Tax","Interest After\nTax Ded. (10%)",
+  "Monthly Interest\nBefore Tax","Monthly Interest\nAfter Tax"
+];
 
-function getBankIcon(bankName) {
-  const lower = (bankName || "").toLowerCase();
-  for (const [key, icon] of Object.entries(BANK_ICONS)) {
-    if (key !== "default" && lower.includes(key)) return icon;
-  }
-  return BANK_ICONS.default;
-}
+// Which columns are numeric (right-align + format with commas)
+const NUM_COLS = new Set([2,6,7,8,9]);
 
-// ─── CSV Parser ───────────────────────────────────────────
 function parseCSV(text) {
   const rows = [];
-  const lines = text.split(/\r?\n/);
-  for (const line of lines) {
+  for (const line of text.split(/\r?\n/)) {
     if (!line.trim()) continue;
-    const cols = [];
-    let inQuote = false, cur = "";
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i];
-      if (ch === '"') { inQuote = !inQuote; }
-      else if (ch === ',' && !inQuote) { cols.push(cur.trim()); cur = ""; }
-      else { cur += ch; }
+    const cols = []; let inQ = false, cur = "";
+    for (const ch of line) {
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ""; }
+      else cur += ch;
     }
     cols.push(cur.trim());
     rows.push(cols);
@@ -372,127 +269,117 @@ function parseCSV(text) {
   return rows;
 }
 
-function cleanNum(str) {
-  if (!str) return 0;
-  const n = parseFloat(String(str).replace(/[^0-9.\-]/g, ""));
+function cleanNum(s) {
+  const n = parseFloat(String(s||"").replace(/[^0-9.\-]/g,""));
   return isNaN(n) ? 0 : n;
 }
 
-function fmt(n) {
-  if (Math.abs(n) >= 1_00_00_000) return (n / 1_00_00_000).toFixed(2) + " Cr";
-  if (Math.abs(n) >= 1_00_000)    return (n / 1_00_000).toFixed(2) + " L";
-  return n.toLocaleString("en-IN");
+function fmtNum(s) {
+  const n = cleanNum(s);
+  if (n === 0 && !String(s||"").match(/\d/)) return s || "—";
+  return n.toLocaleString("en-IN", {minimumFractionDigits:0, maximumFractionDigits:2});
 }
 
-function fmtFull(n) {
-  return n.toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+function fmtSummary(n) {
+  if (n >= 1e7) return (n/1e7).toFixed(2) + " Cr";
+  if (n >= 1e5) return (n/1e5).toFixed(2) + " L";
+  return n.toLocaleString("en-IN",{maximumFractionDigits:0});
 }
 
-// ─── Render ───────────────────────────────────────────────
+function cellVal(val, colIdx) {
+  if (NUM_COLS.has(colIdx)) return fmtNum(val);
+  // rate column: keep as-is (e.g. 9.35%)
+  return val || "—";
+}
+
 function render(rows) {
-  // Skip header row
-  const data = rows.slice(1).filter(r => r[COL.bank] || r[COL.principal]);
+  // Row 0 = headers (skip), row 1 onward = data
+  const dataRows = rows.slice(1);
 
-  // Totals
+  // Detect special rows by bank/first-col value
+  function rowType(r) {
+    const b = (r[C.bank]||"").trim().toLowerCase();
+    if (b === "total" || b === "নিট মোট" || b.includes("total")) return "total";
+    if (b === "sonchoypotro" || b.includes("sanchay") || b.includes("sonchoy")) return "sonchoypotro";
+    if (b === "nit total" || b.includes("nit")) return "nit";
+    return "data";
+  }
+
+  // Summaries from TOTAL or NIT TOTAL row
   let totalPrincipal = 0, totalMonthly = 0;
-  data.forEach(r => {
-    totalPrincipal += cleanNum(r[COL.principal]);
-    totalMonthly   += cleanNum(r[COL.monthlyAfter]);
-  });
+  for (const r of dataRows) {
+    const t = rowType(r);
+    if (t === "nit") {
+      totalPrincipal = cleanNum(r[C.principal]) || totalPrincipal;
+      totalMonthly   = cleanNum(r[C.monthlyAfter]) || totalMonthly;
+    }
+    if (t === "total" && totalPrincipal === 0) {
+      totalPrincipal = cleanNum(r[C.principal]);
+      totalMonthly   = cleanNum(r[C.monthlyAfter]);
+    }
+  }
+  // Fallback: sum data rows
+  if (totalPrincipal === 0) {
+    for (const r of dataRows) {
+      if (rowType(r) === "data") {
+        totalPrincipal += cleanNum(r[C.principal]);
+        totalMonthly   += cleanNum(r[C.monthlyAfter]);
+      }
+    }
+  }
 
-  document.getElementById("total-principal").textContent = fmt(totalPrincipal);
-  document.getElementById("total-monthly").textContent   = fmt(totalMonthly);
-  document.getElementById("inv-count").textContent       = data.length + " items";
+  document.getElementById("s-principal").textContent = fmtSummary(totalPrincipal);
+  document.getElementById("s-monthly").textContent   = fmtSummary(totalMonthly);
+  document.getElementById("last-sync").textContent   =
+    "Last synced: " + new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"});
 
-  // Last updated
-  const now = new Date();
-  document.getElementById("last-updated").textContent =
-    "Last synced: " + now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+  // Build table
+  const wrap = document.createElement("div");
+  wrap.className = "table-wrap";
 
-  // Group by bank
-  const byBank = {};
-  data.forEach(r => {
-    const bank = (r[COL.bank] || "Unknown").trim();
-    if (!byBank[bank]) byBank[bank] = [];
-    byBank[bank].push(r);
-  });
+  const tbl = document.createElement("table");
 
-  const container = document.getElementById("investments-container");
-  container.innerHTML = "";
+  // Title row
+  tbl.innerHTML = `<thead>
+    <tr class="row-title"><td colspan="10">FDR'S</td></tr>
+    <tr>${HEADERS.map(h=>`<th>${h.replace(/\n/g,"<br>")}</th>`).join("")}</tr>
+  </thead><tbody></tbody>`;
 
-  Object.entries(byBank).forEach(([bank, items], gi) => {
-    const group = document.createElement("div");
-    group.className = "bank-group";
-    group.style.animationDelay = (gi * 0.06) + "s";
+  const tbody = tbl.querySelector("tbody");
 
-    const icon = getBankIcon(bank);
-    group.innerHTML = `
-      <div class="bank-header">
-        <div class="bank-icon">${icon}</div>
-        <div class="bank-name">${bank}</div>
-        <div class="bank-count">${items.length} FDR${items.length > 1 ? "s" : ""}</div>
-      </div>
-    `;
+  for (const r of dataRows) {
+    const type = rowType(r);
+    const tr = document.createElement("tr");
+    tr.className = type === "data" ? "data-row"
+                 : type === "total" ? "row-total"
+                 : type === "sonchoypotro" ? "row-sonchoypotro"
+                 : "row-nit";
 
-    items.forEach(r => {
-      const card = document.createElement("div");
-      card.className = "fdr-card";
+    for (let i = 0; i < 10; i++) {
+      const td = document.createElement("td");
+      if (NUM_COLS.has(i)) td.className = "num";
+      td.textContent = cellVal(r[i], i);
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
 
-      const principal   = cleanNum(r[COL.principal]);
-      const rate        = cleanNum(r[COL.rate]);
-      const duration    = cleanNum(r[COL.duration]);
-      const afterTax    = cleanNum(r[COL.afterTax]);
-      const monthlyAfter= cleanNum(r[COL.monthlyAfter]);
-      const date        = (r[COL.date] || "").trim();
-
-      card.innerHTML = `
-        <div class="fdr-top">
-          <div>
-            <div class="fdr-date">${date || "—"}</div>
-            <div class="fdr-principal">৳ ${fmtFull(principal)}</div>
-          </div>
-          <div class="fdr-rate-badge">${rate ? rate + "%" : "—"}</div>
-        </div>
-        <div class="fdr-divider"></div>
-        <div class="fdr-stats">
-          <div class="stat">
-            <div class="stat-label">Duration</div>
-            <div class="stat-value">${duration ? duration + " months" : "—"}</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Total After Tax</div>
-            <div class="stat-value highlight">৳ ${fmtFull(afterTax)}</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Monthly (Before Tax)</div>
-            <div class="stat-value">৳ ${fmtFull(cleanNum(r[COL.monthlyBefore]))}</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Monthly (After Tax)</div>
-            <div class="stat-value gold">৳ ${fmtFull(monthlyAfter)}</div>
-          </div>
-        </div>
-      `;
-      group.appendChild(card);
-    });
-
-    container.appendChild(group);
-  });
+  wrap.appendChild(tbl);
+  document.getElementById("root").innerHTML = "";
+  document.getElementById("root").appendChild(wrap);
 }
 
-// ─── Fetch & refresh ──────────────────────────────────────
-async function loadData() {
+async function load() {
   if (SHEET_CSV_URL === "YOUR_CSV_URL_HERE") {
-    document.getElementById("investments-container").innerHTML = `
+    document.getElementById("root").innerHTML = `
       <div class="state-box">
-        <div class="error-icon">⚙️</div>
+        <div style="font-size:32px;margin-bottom:12px">⚙️</div>
         <strong>Setup needed</strong><br><br>
         Open <code>dashboard.html</code> in a text editor<br>
-        and paste your Google Sheet CSV URL<br>into the <code>SHEET_CSV_URL</code> variable.
+        and replace <code>YOUR_CSV_URL_HERE</code><br>with your Google Sheet CSV URL.
       </div>`;
     return;
   }
-
   try {
     const res = await fetch(SHEET_CSV_URL + "&t=" + Date.now());
     if (!res.ok) throw new Error("HTTP " + res.status);
@@ -500,20 +387,19 @@ async function loadData() {
     const rows = parseCSV(text);
     if (rows.length < 2) throw new Error("Sheet appears empty");
     render(rows);
-  } catch (err) {
-    console.error(err);
-    document.getElementById("investments-container").innerHTML = `
+  } catch(e) {
+    console.error(e);
+    document.getElementById("root").innerHTML = `
       <div class="state-box">
-        <div class="error-icon">⚠️</div>
-        <strong>Could not load data</strong><br><br>
-        ${err.message}<br><br>
-        Make sure the sheet is <strong>publicly shared</strong><br>and the URL is correct.
+        <div style="font-size:32px;margin-bottom:12px">⚠️</div>
+        <strong>Could not load data</strong><br><br>${e.message}<br><br>
+        Make sure the sheet is <strong>publicly shared</strong> and the URL is correct.
       </div>`;
   }
 }
 
-loadData();
-setInterval(loadData, REFRESH_INTERVAL);
+load();
+setInterval(load, REFRESH_MS);
 </script>
 </body>
 </html>
