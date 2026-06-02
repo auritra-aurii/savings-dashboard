@@ -382,8 +382,9 @@ async function load() {
   }
 }
 
-load();
-setInterval(load, REFRESH_MS);
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js");
+}
 </script>
 </body>
 </html>
