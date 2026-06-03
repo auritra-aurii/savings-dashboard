@@ -1,32 +1,48 @@
-const CACHE = "fdr-v1";
-const PAGE = "./dashboard.html";
+const CACHE_NAME = "savings-v1";
 
+// On install — cache the app shell
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.add(PAGE)));
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(cache =>
+      cache.addAll(["./dashboard.html", "./icon.png"])
+    )
+  );
   self.skipWaiting();
 });
 
+// On activate — clean old caches
 self.addEventListener("activate", e => {
-  e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-  ));
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    )
+  );
   self.clients.claim();
 });
 
+// On fetch:
+// - For Google Sheets CSV requests: network first, cache on success, fallback to cache
+// - For everything else: cache first, then network
 self.addEventListener("fetch", e => {
-  // Don't intercept Google Sheets requests — let them go direct
-  if (e.request.url.includes("google.com")) return;
+  const url = e.request.url;
 
-  e.respondWith(
-    caches.match(e.request).then(cached => {
-      // Serve page from cache instantly, update in background
-      if (cached) {
-        fetch(e.request).then(res => {
-          caches.open(CACHE).then(c => c.put(e.request, res));
-        });
-        return cached;
-      }
-      return fetch(e.request);
-    })
-  );
+  if (url.includes("docs.google.com")) {
+    // Data requests: try network, save to cache, fall back to cache if offline
+    e.respondWith(
+      fetch(e.request.clone())
+        .then(res => {
+          if (res && res.status === 200) {
+            const resClone = res.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(e.request, resClone));
+          }
+          return res;
+        })
+        .catch(() => caches.match(e.request))
+    );
+  } else {
+    // App shell: cache first
+    e.respondWith(
+      caches.match(e.request).then(cached => cached || fetch(e.request))
+    );
+  }
 });
