@@ -529,6 +529,11 @@ async function loadSection(name) {
 
 setInterval(()=>{ if(currentSection) loadSection(currentSection); }, REFRESH_MS);
 showHome();
+
+// ══ Service Worker — caches data for offline use ══
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js").catch(() => {});
+}
 </script>
 </body>
 </html>
