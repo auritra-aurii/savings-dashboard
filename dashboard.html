@@ -25,7 +25,7 @@
       --text:       #0f172a;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; }
+    html { font-size: 26px; }
     body {
       font-family: 'Inter', 'Noto Sans Bengali', sans-serif;
       background: var(--gray-100); color: var(--text);
@@ -40,31 +40,31 @@
       box-shadow: 0 2px 8px rgba(0,0,0,.25);
     }
     .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-    .header h1 { font-size: 20px; font-weight: 700; }
-    .header-subtitle { font-size: 12px; color: rgba(255,255,255,.55); margin-bottom: 14px; }
+    .header h1 { font-size: 30px; font-weight: 900; }
+    .header-subtitle { font-size: 22px; color: rgba(255,255,255,.55); margin-bottom: 14px; }
     .sync-pill {
       display: flex; align-items: center; gap: 5px;
       background: rgba(255,255,255,.12); border-radius: 99px;
-      padding: 4px 10px; font-size: 11px; color: rgba(255,255,255,.8); flex-shrink: 0;
+      padding: 4px 10px; font-size: 21px; color: rgba(255,255,255,.8); flex-shrink: 0;
     }
     .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; animation: blink 2s ease-in-out infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
     .summary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .sum-card { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 10px 12px; }
-    .sum-label { font-size: 10px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 3px; }
-    .sum-value { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -.01em; }
-    .sum-value .tk { font-size: 13px; font-weight: 500; margin-right: 1px; opacity: .8; }
+    .sum-label { font-size: 20px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 3px; }
+    .sum-value { font-size: 27px; font-weight: 700; color: #fff; letter-spacing: -.01em; }
+    .sum-value .tk { font-size: 23px; font-weight: 500; margin-right: 1px; opacity: .8; }
 
     .back-btn {
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(255,255,255,.15); border: none; color: white;
-      border-radius: 99px; padding: 6px 14px; font-size: 13px;
+      border-radius: 99px; padding: 6px 14px; font-size: 23px;
       cursor: pointer; margin-bottom: 14px; font-family: inherit;
     }
     .back-btn:active { background: rgba(255,255,255,.25); }
 
-    .last-sync { text-align: center; font-size: 11px; color: var(--gray-400); padding: 8px 0 4px; }
+    .last-sync { text-align: center; font-size: 21px; color: var(--gray-400); padding: 8px 0 4px; }
 
     /* ── HOME ── */
     .home-wrap { padding: 24px 16px 40px; }
@@ -211,7 +211,7 @@ const RANGES = {
   kafco: "D3:E15",
   dps:   "A22:G29",
   padma: "I23:K28",
-  bank:  "A14:D19",
+  bank:  "A15:D19",
 };
 
 const REFRESH_MS = 300_000; // 5 minutes
@@ -489,7 +489,7 @@ function showSection(name) {
 // ══ Load ═════════════════════════════════════════
 async function loadSection(name) {
   if (SHEET_ID === "YOUR_SHEET_ID_HERE") {
-    document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:32px;margin-bottom:12px'>⚙️</div><strong>Setup needed</strong><br><br>Paste your Sheet ID into the SHEET_ID variable.</div>`;
+    document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:42px;margin-bottom:12px'>⚙️</div><strong>Setup needed</strong><br><br>Paste your Sheet ID into the SHEET_ID variable.</div>`;
     return;
   }
   const url = csvUrl(TABS[name], RANGES[name]) + "&t=" + Date.now();
@@ -530,7 +530,7 @@ async function loadSection(name) {
       else if (name==="bank")  { const el=document.getElementById("screen-bank");  el.innerHTML=""; const b=buildTable(rows,"BANK ACCOUNTS — GEETASREE HALDER",new Set([3]),"bank"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
       document.getElementById("last-sync").textContent = "Offline — showing last saved data";
     } else {
-      document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:32px;margin-bottom:12px'>⚠️</div><strong>Could not load data</strong><br><br>${e.message}<br><br>Make sure the sheet is <strong>publicly shared</strong>.</div>`;
+      document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:42px;margin-bottom:12px'>⚠️</div><strong>Could not load data</strong><br><br>${e.message}<br><br>Make sure the sheet is <strong>publicly shared</strong>.</div>`;
     }
   }
 }
