@@ -90,9 +90,9 @@
 
     /* ── TABLE ── */
     .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 12px 16px 32px; }
-    table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,.08); font-size: 14px; min-width: 480px; }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,.08); font-size: 21px; min-width: 480px; }
     .row-title td { background: var(--blue-dark); color: white; text-align: center; font-size: 15px; font-weight: 700; padding: 12px; letter-spacing: .04em; }
-    thead tr:last-child th { background: var(--blue-mid); color: white; font-size: 12px; font-weight: 600; text-align: center; padding: 10px 8px; border-right: 1px solid rgba(255,255,255,.15); vertical-align: bottom; line-height: 1.35; }
+    thead tr:last-child th { background: var(--blue-mid); color: white; font-size: 18px; font-weight: 600; text-align: center; padding: 10px 8px; border-right: 1px solid rgba(255,255,255,.15); vertical-align: bottom; line-height: 1.35; }
     thead tr:last-child th:last-child { border-right: none; }
     tbody tr td { padding: 10px 8px; border-bottom: 1px solid var(--gray-200); border-right: 1px solid var(--gray-200); text-align: center; vertical-align: middle; line-height: 1.3; }
     tbody tr td:last-child { border-right: none; }
@@ -211,7 +211,7 @@ const RANGES = {
   kafco: "D3:E15",
   dps:   "A22:G29",
   padma: "I23:K28",
-  bank:  "A15:D19",
+  bank:  "A15:E19",
 };
 
 const REFRESH_MS = 300_000; // 5 minutes
@@ -426,18 +426,19 @@ function renderPadma(rows) {
 }
 
 // ══ Generic table (KAFCO, Bank) ══════════════════
-function buildTable(rows, title, numColSet, sectionId) {
+function buildTable(rows, title, numColSet, sectionId, customHeaders) {
   localStorage.setItem("cache_"+sectionId, JSON.stringify(rows));
   if (!rows || rows.length < 1) return "<div class='state-box'>No data found.</div>";
   const wrap = document.createElement("div"); wrap.className="table-wrap";
   const tbl  = document.createElement("table");
-  const headerRow = rows[0]; const colCount = headerRow.length;
+  const headerRow = customHeaders || rows[0];
+  const colCount = headerRow.length;
   tbl.innerHTML = `<thead>
     <tr class="row-title"><td colspan="${colCount}">${title}</td></tr>
     <tr>${headerRow.map(h=>`<th>${h||""}</th>`).join("")}</tr>
   </thead><tbody></tbody>`;
   const tbody = tbl.querySelector("tbody");
-  for (const r of rows.slice(1)) {
+  for (const r of (customHeaders ? rows : rows.slice(1))) {
     if (r.every(c=>!c)) continue;
     const tr = document.createElement("tr"); tr.className="data-row";
     for (let i=0; i<colCount; i++) {
@@ -527,7 +528,7 @@ async function loadSection(name) {
       else if (name==="dps")   renderDPS(rows);
       else if (name==="padma") renderPadma(rows);
       else if (name==="kafco") { const el=document.getElementById("screen-kafco"); el.innerHTML=""; const b=buildTable(rows,"BIG FUNDS RECEIVED FROM KAFCO",new Set(),"kafco"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
-      else if (name==="bank")  { const el=document.getElementById("screen-bank");  el.innerHTML=""; const b=buildTable(rows,"BANK ACCOUNTS — GEETASREE HALDER",new Set([3]),"bank"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
+      else if (name==="bank")  { const el=document.getElementById("screen-bank");  el.innerHTML=""; const b=buildTable(rows,"BANK ACCOUNTS — GEETASREE HALDER",new Set([3]),"bank",["Bank Name","Name","Account No","Branch","Status"]); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
       document.getElementById("last-sync").textContent = "Offline — showing last saved data";
     } else {
       document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:42px;margin-bottom:12px'>⚠️</div><strong>Could not load data</strong><br><br>${e.message}<br><br>Make sure the sheet is <strong>publicly shared</strong>.</div>`;
