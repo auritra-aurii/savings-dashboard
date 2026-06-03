@@ -511,7 +511,7 @@ async function loadSection(name) {
     else if (name==="bank") {
       const el = document.getElementById("screen-bank");
       el.innerHTML="";
-      const built = buildTable(rows, "BANK ACCOUNTS — GEETASREE HALDER", new Set([1,2,3]), "bank");
+      const built = buildTable(rows, "BANK ACCOUNTS — GEETASREE HALDER", new Set([3]), "bank");
       typeof built==="string" ? el.innerHTML=built : el.appendChild(built);
     }
 
@@ -527,7 +527,7 @@ async function loadSection(name) {
       else if (name==="dps")   renderDPS(rows);
       else if (name==="padma") renderPadma(rows);
       else if (name==="kafco") { const el=document.getElementById("screen-kafco"); el.innerHTML=""; const b=buildTable(rows,"BIG FUNDS RECEIVED FROM KAFCO",new Set(),"kafco"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
-      else if (name==="bank")  { const el=document.getElementById("screen-bank");  el.innerHTML=""; const b=buildTable(rows,"BANK ACCOUNTS — GEETASREE HALDER",new Set([1,2,3]),"bank"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
+      else if (name==="bank")  { const el=document.getElementById("screen-bank");  el.innerHTML=""; const b=buildTable(rows,"BANK ACCOUNTS — GEETASREE HALDER",new Set([3]),"bank"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
       document.getElementById("last-sync").textContent = "Offline — showing last saved data";
     } else {
       document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:32px;margin-bottom:12px'>⚠️</div><strong>Could not load data</strong><br><br>${e.message}<br><br>Make sure the sheet is <strong>publicly shared</strong>.</div>`;
