@@ -199,7 +199,6 @@
 // ══════════════════════════════════════════════════
 const SHEET_ID = "1yO68AOIsJoX-ffWX7d4XqBTNODaw_mQZNtAYdBu662c";
 
-// Tab names — exact, case-sensitive
 const TABS = {
   fdr:   "new fdrs",
   kafco: "MISC",
@@ -208,33 +207,34 @@ const TABS = {
   bank:  "APP_DPS",
 };
 
-// Cell ranges
 const RANGES = {
-  fdr:   "A1:J22",  // wide enough to handle new rows you add — totals always come from last row
+  fdr:   "A1:J22",
   kafco: "D3:E15",
   dps:   "A22:G29",
   padma: "I23:K28",
   bank:  "A38:D43",
 };
 
-const REFRESH_MS = 300_000; // 5 minutes
+const REFRESH_MS = 300_000;
 
-// FDR: remove original cols 6 & 7 (Interest before tax, Interest after tax ded.)
-// Keep: 0=Bank, 1=Date, 2=Principal, 3=Rate, 4=Duration, 5=Interest Input, 8=Monthly Before, 9=Monthly After
 const FDR_KEEP    = [0,1,2,3,4,5,8,9];
 const FDR_HEADERS = ["Bank","Date","Principal\nAmount","Interest\nRate","Duration\n(Months)","Interest\nInput","Monthly Interest\nBefore Tax","Monthly Interest\nAfter Tax"];
-const FDR_NUM_COLS = new Set([2,6,7]); // indices in the NEW (kept) column order
+const FDR_NUM_COLS = new Set([2,6,7]);
 
-// DPS: columns that are account numbers (plain text, not formatted as money)
-// In range A22:G29, col index 2 = C = account number
 const DPS_PLAIN_COLS = new Set([2]);
-// DPS: columns that are dates — show raw string as-is
 const DPS_DATE_COLS  = new Set([4,5]);
-// DPS: money columns
 const DPS_NUM_COLS   = new Set([3,6]);
 
-// PADMA: all columns shown as plain text (contains dates, mixed data)
-// We'll detect money vs text per cell rather than by column
+// ══ Safe cache helpers — won't crash on Samsung/Android ══
+function saveCache(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
+}
+function loadCache(key) {
+  try {
+    const v = localStorage.getItem(key);
+    return v ? JSON.parse(v) : null;
+  } catch(e) { return null; }
+}
 
 // ══ Helpers ══════════════════════════════════════
 function csvUrl(tab, range) {
@@ -274,11 +274,9 @@ function fmtSummary(n) {
   return n.toLocaleString("en-IN",{maximumFractionDigits:0});
 }
 
-// Convert Google Sheets serial date number to DD-MMM-YY string
 function serialToDate(serial) {
   const n = parseInt(serial);
   if (isNaN(n) || n < 1) return serial;
-  // Google Sheets epoch: Dec 30 1899
   const d = new Date((n - 1) * 86400000 + new Date('1899-12-31').getTime());
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const day = String(d.getUTCDate()).padStart(2,'0');
@@ -287,30 +285,26 @@ function serialToDate(serial) {
   return `${day}-${mon}-${yr}`;
 }
 
-// Decide if a string looks like a date serial (pure integer, plausible range)
 function isDateSerial(s) {
   const n = Number(s);
-  return Number.isInteger(n) && n > 30000 && n < 60000; // covers ~1982–2064
+  return Number.isInteger(n) && n > 30000 && n < 60000;
 }
 
 // ══ FDR render ═══════════════════════════════════
 function renderFDR(rows) {
-  localStorage.setItem("cache_fdr", JSON.stringify(rows));
+  saveCache("cache_fdr", rows);
 
-  // Find last non-empty row — that's the TOTAL row with C & J values
   let lastRow = null;
   for (let i = rows.length - 1; i >= 1; i--) {
     if (rows[i].some(c => c)) { lastRow = rows[i]; break; }
   }
 
-  // Pull totals from last row col 2 (C) and col 9 (J)
   const totalPrincipal = lastRow ? cleanNum(lastRow[2]) : 0;
   const totalMonthly   = lastRow ? cleanNum(lastRow[9]) : 0;
 
   document.getElementById("s-principal").textContent = fmtSummary(totalPrincipal);
   document.getElementById("s-monthly").textContent   = fmtSummary(totalMonthly);
 
-  // Build table — all rows except header, skip fully blank rows
   const dataRows = rows.slice(1).filter(r => r.some(c => c));
 
   function rowType(r) {
@@ -350,7 +344,7 @@ function renderFDR(rows) {
 
 // ══ DPS render ═══════════════════════════════════
 function renderDPS(rows) {
-  localStorage.setItem("cache_dps", JSON.stringify(rows));
+  saveCache("cache_dps", rows);
   if (!rows || rows.length < 1) { document.getElementById("screen-dps").innerHTML="<div class='state-box'>No data.</div>"; return; }
 
   const wrap = document.createElement("div"); wrap.className="table-wrap";
@@ -368,13 +362,10 @@ function renderDPS(rows) {
     for (let i=0; i<colCount; i++) {
       const td = document.createElement("td");
       let val = r[i]||"";
-
       if (DPS_PLAIN_COLS.has(i)) {
-        // Account number — show exactly as-is, no formatting
         td.className = "plain";
         td.textContent = val || "—";
       } else if (DPS_DATE_COLS.has(i)) {
-        // Date column — convert serial if needed, else show as-is
         td.className = "plain";
         td.textContent = val ? (isDateSerial(val) ? serialToDate(val) : val) : "—";
       } else if (DPS_NUM_COLS.has(i)) {
@@ -394,7 +385,7 @@ function renderDPS(rows) {
 
 // ══ PADMA render ═════════════════════════════════
 function renderPadma(rows) {
-  localStorage.setItem("cache_padma", JSON.stringify(rows));
+  saveCache("cache_padma", rows);
   if (!rows || rows.length < 1) { document.getElementById("screen-padma").innerHTML="<div class='state-box'>No data.</div>"; return; }
 
   const wrap = document.createElement("div"); wrap.className="table-wrap";
@@ -412,7 +403,6 @@ function renderPadma(rows) {
     for (let i=0; i<colCount; i++) {
       const td = document.createElement("td");
       let val = r[i]||"";
-      // Convert any date serials, leave everything else as-is
       if (val && isDateSerial(val)) {
         td.className = "plain";
         td.textContent = serialToDate(val);
@@ -430,7 +420,7 @@ function renderPadma(rows) {
 
 // ══ Generic table (KAFCO, Bank) ══════════════════
 function buildTable(rows, title, numColSet, sectionId, customHeaders) {
-  localStorage.setItem("cache_"+sectionId, JSON.stringify(rows));
+  saveCache("cache_"+sectionId, rows);
   if (!rows || rows.length < 1) return "<div class='state-box'>No data found.</div>";
   const wrap = document.createElement("div"); wrap.className="table-wrap";
   const tbl  = document.createElement("table");
@@ -506,7 +496,6 @@ async function loadSection(name) {
     else if (name==="dps")   renderDPS(rows);
     else if (name==="padma") renderPadma(rows);
     else if (name==="kafco") {
-      // KAFCO: col 1 is amount — center aligned (no num class), col 0 is label
       const el = document.getElementById("screen-kafco");
       el.innerHTML="";
       const built = buildTable(rows, "BIG FUNDS RECEIVED FROM KAFCO", new Set(), "kafco");
@@ -524,9 +513,8 @@ async function loadSection(name) {
 
   } catch(e) {
     console.error(e);
-    const cached = localStorage.getItem("cache_"+name);
-    if (cached) {
-      const rows = JSON.parse(cached);
+    const rows = loadCache("cache_"+name);
+    if (rows) {
       if      (name==="fdr")   renderFDR(rows);
       else if (name==="dps")   renderDPS(rows);
       else if (name==="padma") renderPadma(rows);
