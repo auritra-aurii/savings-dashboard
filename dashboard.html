@@ -221,7 +221,7 @@ const RANGES = {
   dps:      "A22:G29",
   padma:    "I23:K28",
   bank:     "A38:D43",
-  aussruta: "G37:H68",
+  aussruta: "G38:H68",
 };
 
 const REFRESH_MS = 300_000;
@@ -461,7 +461,7 @@ async function loadSection(name) {
     }
     else if (name==="aussruta") {
       const el=document.getElementById("screen-aussruta"); el.innerHTML="";
-      const b=buildTable(rows,"AUSSRUTA — STUDY ABROAD COSTINGS",new Set(),"aussruta");
+      const b=buildTable(rows,"BBP COSTINGS GERMANY",new Set([1]),"aussruta");
       typeof b==="string"?el.innerHTML=b:el.appendChild(b);
     }
 
