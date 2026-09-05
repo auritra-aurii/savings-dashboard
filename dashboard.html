@@ -85,11 +85,12 @@
     .home-btn-title { font-size: 16px; font-weight: 700; color: var(--blue-dark); margin-bottom: 3px; line-height: 1.2; }
     .home-btn-desc { font-size: 12px; color: var(--gray-400); line-height: 1.3; }
     .home-btn-arrow { margin-left: auto; font-size: 20px; color: var(--gray-400); flex-shrink: 0; }
-    .ic-fdr   { background: #dbeafe; }
-    .ic-kafco { background: #dcfce7; }
-    .ic-dps   { background: #fef9c3; }
-    .ic-padma { background: #fce7f3; }
-    .ic-bank  { background: #ede9fe; }
+    .ic-fdr      { background: #dbeafe; }
+    .ic-kafco    { background: #dcfce7; }
+    .ic-dps      { background: #fef9c3; }
+    .ic-padma    { background: #fce7f3; }
+    .ic-bank     { background: #ede9fe; }
+    .ic-aussruta { background: #fef3c7; }
 
     /* ── TABLE ── */
     .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 12px 16px 32px; }
@@ -184,59 +185,62 @@
       </div>
       <div class="home-btn-arrow">›</div>
     </div>
+    <div class="home-btn" onclick="showSection('aussruta')">
+      <div class="home-btn-icon ic-aussruta">✈️</div>
+      <div class="home-btn-text">
+        <div class="home-btn-title">AUSSRUTA</div>
+        <div class="home-btn-desc">Study abroad costings</div>
+      </div>
+      <div class="home-btn-arrow">›</div>
+    </div>
   </div>
 </div>
 
-<div id="screen-fdr"   class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
-<div id="screen-kafco" class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
-<div id="screen-dps"   class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
-<div id="screen-padma" class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
-<div id="screen-bank"  class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
+<div id="screen-fdr"      class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
+<div id="screen-kafco"    class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
+<div id="screen-dps"      class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
+<div id="screen-padma"    class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
+<div id="screen-bank"     class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
+<div id="screen-aussruta" class="hidden"><div class="state-box"><div class="spinner"></div>Loading…</div></div>
 
 <script>
-// ══════════════════════════════════════════════════
-// ★ ONLY THING YOU NEED TO FILL IN ★
-// ══════════════════════════════════════════════════
 const SHEET_ID = "1yO68AOIsJoX-ffWX7d4XqBTNODaw_mQZNtAYdBu662c";
 
 const TABS = {
-  fdr:   "new fdrs",
-  kafco: "MISC",
-  dps:   "APP_DPS",
-  padma: "APP_DPS",
-  bank:  "APP_DPS",
+  fdr:      "new fdrs",
+  kafco:    "MISC",
+  dps:      "APP_DPS",
+  padma:    "APP_DPS",
+  bank:     "APP_DPS",
+  aussruta: "APP_DPS",
 };
 
 const RANGES = {
-  fdr:   "A1:J22",
-  kafco: "D3:E15",
-  dps:   "A22:G29",
-  padma: "I23:K28",
-  bank:  "A38:D43",
+  fdr:      "A1:J22",
+  kafco:    "D3:E15",
+  dps:      "A22:G29",
+  padma:    "I23:K28",
+  bank:     "A38:D43",
+  aussruta: "G37:H68",
 };
 
 const REFRESH_MS = 300_000;
 
-const FDR_KEEP    = [0,1,2,3,4,5,8,9];
-const FDR_HEADERS = ["Bank","Date","Principal\nAmount","Interest\nRate","Duration\n(Months)","Interest\nInput","Monthly Interest\nBefore Tax","Monthly Interest\nAfter Tax"];
+const FDR_KEEP     = [0,1,2,3,4,5,8,9];
+const FDR_HEADERS  = ["Bank","Date","Principal\nAmount","Interest\nRate","Duration\n(Months)","Interest\nInput","Monthly Interest\nBefore Tax","Monthly Interest\nAfter Tax"];
 const FDR_NUM_COLS = new Set([2,6,7]);
-
 const DPS_PLAIN_COLS = new Set([2]);
 const DPS_DATE_COLS  = new Set([4,5]);
 const DPS_NUM_COLS   = new Set([3,6]);
 
-// ══ Safe cache helpers — won't crash on Samsung/Android ══
 function saveCache(key, val) {
   try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
 }
 function loadCache(key) {
-  try {
-    const v = localStorage.getItem(key);
-    return v ? JSON.parse(v) : null;
-  } catch(e) { return null; }
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; }
+  catch(e) { return null; }
 }
 
-// ══ Helpers ══════════════════════════════════════
 function csvUrl(tab, range) {
   let url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
   if (range) url += `&range=${encodeURIComponent(range)}`;
@@ -273,64 +277,42 @@ function fmtSummary(n) {
   if (n >= 1e5) return (n/1e5).toFixed(2)+" L";
   return n.toLocaleString("en-IN",{maximumFractionDigits:0});
 }
-
 function serialToDate(serial) {
   const n = parseInt(serial);
   if (isNaN(n) || n < 1) return serial;
   const d = new Date((n - 1) * 86400000 + new Date('1899-12-31').getTime());
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  const day = String(d.getUTCDate()).padStart(2,'0');
-  const mon = months[d.getUTCMonth()];
-  const yr  = String(d.getUTCFullYear()).slice(-2);
-  return `${day}-${mon}-${yr}`;
+  return `${String(d.getUTCDate()).padStart(2,'0')}-${months[d.getUTCMonth()]}-${String(d.getUTCFullYear()).slice(-2)}`;
 }
-
 function isDateSerial(s) {
-  const n = Number(s);
-  return Number.isInteger(n) && n > 30000 && n < 60000;
+  const n = Number(s); return Number.isInteger(n) && n > 30000 && n < 60000;
 }
 
-// ══ FDR render ═══════════════════════════════════
+// ══ FDR render ════════════════════════════════════
 function renderFDR(rows) {
   saveCache("cache_fdr", rows);
-
   let lastRow = null;
-  for (let i = rows.length - 1; i >= 1; i--) {
-    if (rows[i].some(c => c)) { lastRow = rows[i]; break; }
-  }
-
-  const totalPrincipal = lastRow ? cleanNum(lastRow[2]) : 0;
-  const totalMonthly   = lastRow ? cleanNum(lastRow[9]) : 0;
-
-  document.getElementById("s-principal").textContent = fmtSummary(totalPrincipal);
-  document.getElementById("s-monthly").textContent   = fmtSummary(totalMonthly);
-
+  for (let i = rows.length - 1; i >= 1; i--) { if (rows[i].some(c => c)) { lastRow = rows[i]; break; } }
+  document.getElementById("s-principal").textContent = fmtSummary(lastRow ? cleanNum(lastRow[2]) : 0);
+  document.getElementById("s-monthly").textContent   = fmtSummary(lastRow ? cleanNum(lastRow[9]) : 0);
   const dataRows = rows.slice(1).filter(r => r.some(c => c));
-
   function rowType(r) {
     const b = (r[0]||"").trim().toLowerCase();
-    if (b.includes("nit"))     return "nit";
-    if (b.includes("total"))   return "total";
+    if (b.includes("nit")) return "nit";
+    if (b.includes("total")) return "total";
     if (b.includes("sonchoy")||b.includes("sanchay")||b==="sonchoypotro") return "sonchoypotro";
     return "data";
   }
-
-  const wrap = document.createElement("div");
-  wrap.className = "table-wrap";
+  const wrap = document.createElement("div"); wrap.className = "table-wrap";
   const tbl = document.createElement("table");
-  tbl.innerHTML = `<thead>
-    <tr class="row-title"><td colspan="${FDR_HEADERS.length}">FDR'S</td></tr>
-    <tr>${FDR_HEADERS.map(h=>`<th>${h.replace(/\n/g,"<br>")}</th>`).join("")}</tr>
-  </thead><tbody></tbody>`;
+  tbl.innerHTML = `<thead><tr class="row-title"><td colspan="${FDR_HEADERS.length}">FDR'S</td></tr><tr>${FDR_HEADERS.map(h=>`<th>${h.replace(/\n/g,"<br>")}</th>`).join("")}</tr></thead><tbody></tbody>`;
   const tbody = tbl.querySelector("tbody");
-
   for (const r of dataRows) {
     const type = rowType(r);
     const tr = document.createElement("tr");
     tr.className = type==="data"?"data-row":type==="total"?"row-total":type==="sonchoypotro"?"row-sonchoypotro":"row-nit";
     FDR_KEEP.forEach((origIdx, newIdx) => {
-      const td = document.createElement("td");
-      const val = r[origIdx]||"";
+      const td = document.createElement("td"); const val = r[origIdx]||"";
       if (FDR_NUM_COLS.has(newIdx)) { td.className="num"; td.textContent=fmtNum(val); }
       else td.textContent = val||"—";
       tr.appendChild(td);
@@ -338,107 +320,78 @@ function renderFDR(rows) {
     tbody.appendChild(tr);
   }
   wrap.appendChild(tbl);
-  const screen = document.getElementById("screen-fdr");
-  screen.innerHTML=""; screen.appendChild(wrap);
+  document.getElementById("screen-fdr").innerHTML="";
+  document.getElementById("screen-fdr").appendChild(wrap);
 }
 
-// ══ DPS render ═══════════════════════════════════
+// ══ DPS render ════════════════════════════════════
 function renderDPS(rows) {
   saveCache("cache_dps", rows);
   if (!rows || rows.length < 1) { document.getElementById("screen-dps").innerHTML="<div class='state-box'>No data.</div>"; return; }
-
   const wrap = document.createElement("div"); wrap.className="table-wrap";
   const tbl  = document.createElement("table");
   const headerRow = rows[0]; const colCount = headerRow.length;
-  tbl.innerHTML = `<thead>
-    <tr class="row-title"><td colspan="${colCount}">RUNNING DPS</td></tr>
-    <tr>${headerRow.map(h=>`<th>${h||""}</th>`).join("")}</tr>
-  </thead><tbody></tbody>`;
+  tbl.innerHTML = `<thead><tr class="row-title"><td colspan="${colCount}">RUNNING DPS</td></tr><tr>${headerRow.map(h=>`<th>${h||""}</th>`).join("")}</tr></thead><tbody></tbody>`;
   const tbody = tbl.querySelector("tbody");
-
   for (const r of rows.slice(1)) {
     if (r.every(c=>!c)) continue;
     const tr = document.createElement("tr"); tr.className="data-row";
     for (let i=0; i<colCount; i++) {
-      const td = document.createElement("td");
-      let val = r[i]||"";
-      if (DPS_PLAIN_COLS.has(i)) {
-        td.className = "plain";
-        td.textContent = val || "—";
-      } else if (DPS_DATE_COLS.has(i)) {
-        td.className = "plain";
-        td.textContent = val ? (isDateSerial(val) ? serialToDate(val) : val) : "—";
-      } else if (DPS_NUM_COLS.has(i)) {
-        td.className = "num";
-        td.textContent = val ? fmtNum(val) : "—";
-      } else {
-        td.textContent = val || "—";
-      }
+      const td = document.createElement("td"); let val = r[i]||"";
+      if (DPS_PLAIN_COLS.has(i)) { td.className="plain"; td.textContent=val||"—"; }
+      else if (DPS_DATE_COLS.has(i)) { td.className="plain"; td.textContent=val?(isDateSerial(val)?serialToDate(val):val):"—"; }
+      else if (DPS_NUM_COLS.has(i)) { td.className="num"; td.textContent=val?fmtNum(val):"—"; }
+      else { td.textContent=val||"—"; }
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
   }
   wrap.appendChild(tbl);
-  const screen = document.getElementById("screen-dps");
-  screen.innerHTML=""; screen.appendChild(wrap);
+  document.getElementById("screen-dps").innerHTML="";
+  document.getElementById("screen-dps").appendChild(wrap);
 }
 
-// ══ PADMA render ═════════════════════════════════
+// ══ PADMA render ══════════════════════════════════
 function renderPadma(rows) {
   saveCache("cache_padma", rows);
   if (!rows || rows.length < 1) { document.getElementById("screen-padma").innerHTML="<div class='state-box'>No data.</div>"; return; }
-
   const wrap = document.createElement("div"); wrap.className="table-wrap";
   const tbl  = document.createElement("table");
   const headerRow = rows[0]; const colCount = headerRow.length;
-  tbl.innerHTML = `<thead>
-    <tr class="row-title"><td colspan="${colCount}">PADMA BANK TENURE</td></tr>
-    <tr>${headerRow.map(h=>`<th>${h||""}</th>`).join("")}</tr>
-  </thead><tbody></tbody>`;
+  tbl.innerHTML = `<thead><tr class="row-title"><td colspan="${colCount}">PADMA BANK TENURE</td></tr><tr>${headerRow.map(h=>`<th>${h||""}</th>`).join("")}</tr></thead><tbody></tbody>`;
   const tbody = tbl.querySelector("tbody");
-
   for (const r of rows.slice(1)) {
     if (r.every(c=>!c)) continue;
     const tr = document.createElement("tr"); tr.className="data-row";
     for (let i=0; i<colCount; i++) {
-      const td = document.createElement("td");
-      let val = r[i]||"";
-      if (val && isDateSerial(val)) {
-        td.className = "plain";
-        td.textContent = serialToDate(val);
-      } else {
-        td.textContent = val || "—";
-      }
+      const td = document.createElement("td"); let val = r[i]||"";
+      if (val && isDateSerial(val)) { td.className="plain"; td.textContent=serialToDate(val); }
+      else { td.textContent=val||"—"; }
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
   }
   wrap.appendChild(tbl);
-  const screen = document.getElementById("screen-padma");
-  screen.innerHTML=""; screen.appendChild(wrap);
+  document.getElementById("screen-padma").innerHTML="";
+  document.getElementById("screen-padma").appendChild(wrap);
 }
 
-// ══ Generic table (KAFCO, Bank) ══════════════════
+// ══ Generic table ════════════════════════════════
 function buildTable(rows, title, numColSet, sectionId, customHeaders) {
   saveCache("cache_"+sectionId, rows);
   if (!rows || rows.length < 1) return "<div class='state-box'>No data found.</div>";
   const wrap = document.createElement("div"); wrap.className="table-wrap";
   const tbl  = document.createElement("table");
-  const headerRow = customHeaders || rows[0];
-  const colCount = headerRow.length;
-  tbl.innerHTML = `<thead>
-    <tr class="row-title"><td colspan="${colCount}">${title}</td></tr>
-    <tr>${headerRow.map(h=>`<th>${h||""}</th>`).join("")}</tr>
-  </thead><tbody></tbody>`;
+  const headerRow = customHeaders || rows[0]; const colCount = headerRow.length;
+  tbl.innerHTML = `<thead><tr class="row-title"><td colspan="${colCount}">${title}</td></tr><tr>${headerRow.map(h=>`<th>${h||""}</th>`).join("")}</tr></thead><tbody></tbody>`;
   const tbody = tbl.querySelector("tbody");
   for (const r of (customHeaders ? rows : rows.slice(1))) {
     if (r.every(c=>!c)) continue;
     const tr = document.createElement("tr"); tr.className="data-row";
     for (let i=0; i<colCount; i++) {
-      const td = document.createElement("td");
-      const val = r[i]||"";
+      const td = document.createElement("td"); const val = r[i]||"";
       if (numColSet && numColSet.has(i)) { td.className="num"; td.textContent=fmtNum(val); }
-      else { td.textContent = val||"—"; }
+      else { td.textContent=val||"—"; }
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
@@ -447,20 +400,22 @@ function buildTable(rows, title, numColSet, sectionId, customHeaders) {
   return wrap;
 }
 
-// ══ Navigation ═══════════════════════════════════
+// ══ Navigation ════════════════════════════════════
 const SECTION_META = {
-  fdr:   { title:"📊 FDR's" },
-  kafco: { title:"💰 Funds from KAFCO" },
-  dps:   { title:"🏦 Running DPS" },
-  padma: { title:"🌸 Padma Bank Tenure" },
-  bank:  { title:"🏛️ Bank Accounts" },
+  fdr:      { title:"📊 FDR's" },
+  kafco:    { title:"💰 Funds from KAFCO" },
+  dps:      { title:"🏦 Running DPS" },
+  padma:    { title:"🌸 Padma Bank Tenure" },
+  bank:     { title:"🏛️ Bank Accounts" },
+  aussruta: { title:"✈️ AUSSRUTA — Study Abroad" },
 };
+const ALL_SECTIONS = ["fdr","kafco","dps","padma","bank","aussruta"];
 let currentSection = null;
 
 function showHome() {
   currentSection = null;
   document.getElementById("screen-home").classList.remove("hidden");
-  ["fdr","kafco","dps","padma","bank"].forEach(s=>document.getElementById("screen-"+s).classList.add("hidden"));
+  ALL_SECTIONS.forEach(s=>document.getElementById("screen-"+s).classList.add("hidden"));
   document.getElementById("header-title").textContent = "📊 My Savings";
   document.getElementById("header-sub").classList.remove("hidden");
   document.getElementById("back-btn").classList.add("hidden");
@@ -471,8 +426,7 @@ function showHome() {
 function showSection(name) {
   currentSection = name;
   document.getElementById("screen-home").classList.add("hidden");
-  ["fdr","kafco","dps","padma","bank"].forEach(s=>
-    document.getElementById("screen-"+s).classList.toggle("hidden", s!==name));
+  ALL_SECTIONS.forEach(s=>document.getElementById("screen-"+s).classList.toggle("hidden", s!==name));
   document.getElementById("header-title").textContent = SECTION_META[name].title;
   document.getElementById("header-sub").classList.add("hidden");
   document.getElementById("back-btn").classList.remove("hidden");
@@ -480,7 +434,7 @@ function showSection(name) {
   loadSection(name);
 }
 
-// ══ Load ═════════════════════════════════════════
+// ══ Load ══════════════════════════════════════════
 async function loadSection(name) {
   if (SHEET_ID === "YOUR_SHEET_ID_HERE") {
     document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:42px;margin-bottom:12px'>⚙️</div><strong>Setup needed</strong><br><br>Paste your Sheet ID into the SHEET_ID variable.</div>`;
@@ -496,16 +450,19 @@ async function loadSection(name) {
     else if (name==="dps")   renderDPS(rows);
     else if (name==="padma") renderPadma(rows);
     else if (name==="kafco") {
-      const el = document.getElementById("screen-kafco");
-      el.innerHTML="";
-      const built = buildTable(rows, "BIG FUNDS RECEIVED FROM KAFCO", new Set(), "kafco");
-      typeof built==="string" ? el.innerHTML=built : el.appendChild(built);
+      const el=document.getElementById("screen-kafco"); el.innerHTML="";
+      const b=buildTable(rows,"BIG FUNDS RECEIVED FROM KAFCO",new Set(),"kafco");
+      typeof b==="string"?el.innerHTML=b:el.appendChild(b);
     }
     else if (name==="bank") {
-      const el = document.getElementById("screen-bank");
-      el.innerHTML="";
-      const built = buildTable(rows, "BANK ACCOUNTS — GEETASREE HALDER", new Set([3]), "bank");
-      typeof built==="string" ? el.innerHTML=built : el.appendChild(built);
+      const el=document.getElementById("screen-bank"); el.innerHTML="";
+      const b=buildTable(rows,"BANK ACCOUNTS — GEETASREE HALDER",new Set([3]),"bank");
+      typeof b==="string"?el.innerHTML=b:el.appendChild(b);
+    }
+    else if (name==="aussruta") {
+      const el=document.getElementById("screen-aussruta"); el.innerHTML="";
+      const b=buildTable(rows,"AUSSRUTA — STUDY ABROAD COSTINGS",new Set(),"aussruta");
+      typeof b==="string"?el.innerHTML=b:el.appendChild(b);
     }
 
     document.getElementById("last-sync").textContent =
@@ -518,8 +475,9 @@ async function loadSection(name) {
       if      (name==="fdr")   renderFDR(rows);
       else if (name==="dps")   renderDPS(rows);
       else if (name==="padma") renderPadma(rows);
-      else if (name==="kafco") { const el=document.getElementById("screen-kafco"); el.innerHTML=""; const b=buildTable(rows,"BIG FUNDS RECEIVED FROM KAFCO",new Set(),"kafco"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
-      else if (name==="bank")  { const el=document.getElementById("screen-bank");  el.innerHTML=""; const b=buildTable(rows,"BANK ACCOUNTS — GEETASREE HALDER",new Set([3]),"bank",["Bank Name","Name","Account No","Branch","Status"]); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
+      else if (name==="kafco")    { const el=document.getElementById("screen-kafco");    el.innerHTML=""; const b=buildTable(rows,"BIG FUNDS RECEIVED FROM KAFCO",new Set(),"kafco"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
+      else if (name==="bank")     { const el=document.getElementById("screen-bank");     el.innerHTML=""; const b=buildTable(rows,"BANK ACCOUNTS — GEETASREE HALDER",new Set([3]),"bank",["Bank Name","Name","Account No","Branch","Status"]); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
+      else if (name==="aussruta") { const el=document.getElementById("screen-aussruta"); el.innerHTML=""; const b=buildTable(rows,"AUSSRUTA — STUDY ABROAD COSTINGS",new Set(),"aussruta"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
       document.getElementById("last-sync").textContent = "Offline — showing last saved data";
     } else {
       document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:42px;margin-bottom:12px'>⚠️</div><strong>Could not load data</strong><br><br>${e.message}<br><br>Make sure the sheet is <strong>publicly shared</strong>.</div>`;
@@ -530,7 +488,6 @@ async function loadSection(name) {
 setInterval(()=>{ if(currentSection) loadSection(currentSection); }, REFRESH_MS);
 showHome();
 
-// ══ Service Worker — caches data for offline use ══
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js").catch(() => {});
 }
