@@ -1,4 +1,4 @@
-const CACHE_NAME = "savings-v1";
+const CACHE_NAME = "savings-v2";
 
 // On install — cache the app shell
 self.addEventListener("install", e => {
