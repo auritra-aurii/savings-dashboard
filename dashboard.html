@@ -209,7 +209,7 @@ const RANGES = {
   dps:      "A22:G29",
   padma:    "I23:K28",
   bank:     "A38:D43",
-  aussruta: "G37:H68",  // deliberately include G37 so we can detect and skip the merged title
+  aussruta: "G38:H68",  // deliberately include G37 so we can detect and skip the merged title
 };
 
 const REFRESH_MS = 300_000;
@@ -373,13 +373,7 @@ function renderAussruta(rows) {
   // Filter out: blank rows AND the merged title row
   // The merged title row will have all text in col 0 and empty col 1,
   // OR col 0 contains "BBP" or "GERMANY" — skip it
-  const dataRows = rows.filter(r => {
-    const c0 = (r[0]||"").trim();
-    const c1 = (r[1]||"").trim();
-    if (!c0 && !c1) return false; // blank row
-    if (c0.toUpperCase().includes("BBP") || c0.toUpperCase().includes("GERMANY")) return false; // title row
-    return true;
-  });
+const dataRows = rows.filter(r => (r[0]||"").trim() !== "");
 
   if (dataRows.length === 0) {
     screen.innerHTML = "<div class='state-box'>No data found.</div>";
