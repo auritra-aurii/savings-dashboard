@@ -34,8 +34,6 @@
       background: var(--gray-100); color: var(--text);
       min-height: 100dvh; -webkit-text-size-adjust: 100%;
     }
-
-    /* ── HEADER ── */
     .header {
       background: var(--blue-dark); color: white;
       padding: 20px 16px 16px;
@@ -52,13 +50,11 @@
     }
     .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; animation: blink 2s ease-in-out infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
-
     .summary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .sum-card { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 10px 12px; }
     .sum-label { font-size: 20px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 3px; }
     .sum-value { font-size: 27px; font-weight: 700; color: #fff; letter-spacing: -.01em; }
     .sum-value .tk { font-size: 23px; font-weight: 500; margin-right: 1px; opacity: .8; }
-
     .back-btn {
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(255,255,255,.15); border: none; color: white;
@@ -66,10 +62,7 @@
       cursor: pointer; margin-bottom: 14px; font-family: inherit;
     }
     .back-btn:active { background: rgba(255,255,255,.25); }
-
     .last-sync { text-align: center; font-size: 21px; color: var(--gray-400); padding: 8px 0 4px; }
-
-    /* ── HOME ── */
     .home-wrap { padding: 24px 16px 40px; }
     .home-sub { font-size: 14px; color: var(--gray-400); margin-bottom: 28px; }
     .home-grid { display: flex; flex-direction: column; gap: 14px; }
@@ -91,8 +84,6 @@
     .ic-padma    { background: #fce7f3; }
     .ic-bank     { background: #ede9fe; }
     .ic-aussruta { background: #fef3c7; }
-
-    /* ── TABLE ── */
     .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 12px 16px 32px; }
     table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,.08); font-size: 21px; min-width: 480px; }
     .row-title td { background: var(--blue-dark); color: white; text-align: center; font-size: 15px; font-weight: 700; padding: 12px; letter-spacing: .04em; }
@@ -110,8 +101,6 @@
     tr.row-nit td { background: var(--nit-bg) !important; font-weight: 700; font-size: 15px; border-top: 2px solid var(--blue-dark); color: var(--blue-dark); }
     .num { text-align: right !important; font-variant-numeric: tabular-nums; }
     .plain { text-align: center !important; font-variant-numeric: normal !important; }
-
-    /* ── STATE ── */
     .state-box { text-align: center; padding: 60px 20px; color: var(--gray-400); font-size: 15px; background: white; margin: 16px; border-radius: 12px; }
     .spinner { width: 32px; height: 32px; border: 3px solid var(--gray-200); border-top-color: var(--blue-mid); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 14px; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -141,7 +130,6 @@
 
 <div id="last-sync" class="last-sync"></div>
 
-<!-- HOME -->
 <div id="screen-home" class="home-wrap">
   <div class="home-sub">What would you like to see today?</div>
   <div class="home-grid">
@@ -221,11 +209,10 @@ const RANGES = {
   dps:      "A22:G29",
   padma:    "I23:K28",
   bank:     "A38:D43",
-  aussruta: "G38:H68",
+  aussruta: "G37:H68",  // deliberately include G37 so we can detect and skip the merged title
 };
 
 const REFRESH_MS = 300_000;
-
 const FDR_KEEP     = [0,1,2,3,4,5,8,9];
 const FDR_HEADERS  = ["Bank","Date","Principal\nAmount","Interest\nRate","Duration\n(Months)","Interest\nInput","Monthly Interest\nBefore Tax","Monthly Interest\nAfter Tax"];
 const FDR_NUM_COLS = new Set([2,6,7]);
@@ -376,6 +363,66 @@ function renderPadma(rows) {
   document.getElementById("screen-padma").appendChild(wrap);
 }
 
+// ══ AUSSRUTA render ═══════════════════════════════
+// Handles the merged title row by detecting and skipping it,
+// then uses row 1 (AGENCY row) as first data row with hardcoded headers
+function renderAussruta(rows) {
+  saveCache("cache_aussruta", rows);
+  const screen = document.getElementById("screen-aussruta");
+
+  // Filter out: blank rows AND the merged title row
+  // The merged title row will have all text in col 0 and empty col 1,
+  // OR col 0 contains "BBP" or "GERMANY" — skip it
+  const dataRows = rows.filter(r => {
+    const c0 = (r[0]||"").trim();
+    const c1 = (r[1]||"").trim();
+    if (!c0 && !c1) return false; // blank row
+    if (c0.toUpperCase().includes("BBP") || c0.toUpperCase().includes("GERMANY")) return false; // title row
+    return true;
+  });
+
+  if (dataRows.length === 0) {
+    screen.innerHTML = "<div class='state-box'>No data found.</div>";
+    return;
+  }
+
+  const wrap = document.createElement("div"); wrap.className="table-wrap";
+  const tbl  = document.createElement("table");
+  tbl.innerHTML = `<thead>
+    <tr class="row-title"><td colspan="2">BBP COSTINGS GERMANY</td></tr>
+    <tr><th>Item</th><th>Amount</th></tr>
+  </thead><tbody></tbody>`;
+  const tbody = tbl.querySelector("tbody");
+
+  for (const r of dataRows) {
+    const item   = (r[0]||"").trim();
+    const amount = (r[1]||"").trim();
+    if (!item && !amount) continue;
+
+    const isTotalRow = item.toUpperCase() === "TOTAL";
+    const tr = document.createElement("tr");
+    tr.className = isTotalRow ? "row-total" : "data-row";
+
+    const td0 = document.createElement("td");
+    td0.textContent = item || "—";
+    if (isTotalRow) td0.style.fontWeight = "700";
+
+    const td1 = document.createElement("td");
+    td1.className = "num";
+    // Keep amount exactly as sheet shows it (may be ৳ or $ formatted)
+    td1.textContent = amount || "—";
+    if (isTotalRow) td1.style.fontWeight = "700";
+
+    tr.appendChild(td0);
+    tr.appendChild(td1);
+    tbody.appendChild(tr);
+  }
+
+  wrap.appendChild(tbl);
+  screen.innerHTML = "";
+  screen.appendChild(wrap);
+}
+
 // ══ Generic table ════════════════════════════════
 function buildTable(rows, title, numColSet, sectionId, customHeaders) {
   saveCache("cache_"+sectionId, rows);
@@ -437,7 +484,7 @@ function showSection(name) {
 // ══ Load ══════════════════════════════════════════
 async function loadSection(name) {
   if (SHEET_ID === "YOUR_SHEET_ID_HERE") {
-    document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:42px;margin-bottom:12px'>⚙️</div><strong>Setup needed</strong><br><br>Paste your Sheet ID into the SHEET_ID variable.</div>`;
+    document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:42px;margin-bottom:12px'>⚙️</div><strong>Setup needed</strong></div>`;
     return;
   }
   const url = csvUrl(TABS[name], RANGES[name]) + "&t=" + Date.now();
@@ -446,9 +493,10 @@ async function loadSection(name) {
     if (!res.ok) throw new Error("HTTP "+res.status);
     const rows = parseCSV(await res.text());
 
-    if      (name==="fdr")   renderFDR(rows);
-    else if (name==="dps")   renderDPS(rows);
-    else if (name==="padma") renderPadma(rows);
+    if      (name==="fdr")      renderFDR(rows);
+    else if (name==="dps")      renderDPS(rows);
+    else if (name==="padma")    renderPadma(rows);
+    else if (name==="aussruta") renderAussruta(rows);
     else if (name==="kafco") {
       const el=document.getElementById("screen-kafco"); el.innerHTML="";
       const b=buildTable(rows,"BIG FUNDS RECEIVED FROM KAFCO",new Set(),"kafco");
@@ -459,11 +507,6 @@ async function loadSection(name) {
       const b=buildTable(rows,"BANK ACCOUNTS — GEETASREE HALDER",new Set([3]),"bank");
       typeof b==="string"?el.innerHTML=b:el.appendChild(b);
     }
-    else if (name==="aussruta") {
-      const el=document.getElementById("screen-aussruta"); el.innerHTML="";
-      const b=buildTable(rows,"BBP COSTINGS GERMANY",new Set([1]),"aussruta");
-      typeof b==="string"?el.innerHTML=b:el.appendChild(b);
-    }
 
     document.getElementById("last-sync").textContent =
       "Last synced: " + new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"});
@@ -472,12 +515,12 @@ async function loadSection(name) {
     console.error(e);
     const rows = loadCache("cache_"+name);
     if (rows) {
-      if      (name==="fdr")   renderFDR(rows);
-      else if (name==="dps")   renderDPS(rows);
-      else if (name==="padma") renderPadma(rows);
-      else if (name==="kafco")    { const el=document.getElementById("screen-kafco");    el.innerHTML=""; const b=buildTable(rows,"BIG FUNDS RECEIVED FROM KAFCO",new Set(),"kafco"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
-      else if (name==="bank")     { const el=document.getElementById("screen-bank");     el.innerHTML=""; const b=buildTable(rows,"BANK ACCOUNTS — GEETASREE HALDER",new Set([3]),"bank",["Bank Name","Name","Account No","Branch","Status"]); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
-      else if (name==="aussruta") { const el=document.getElementById("screen-aussruta"); el.innerHTML=""; const b=buildTable(rows,"AUSSRUTA — STUDY ABROAD COSTINGS",new Set(),"aussruta"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
+      if      (name==="fdr")      renderFDR(rows);
+      else if (name==="dps")      renderDPS(rows);
+      else if (name==="padma")    renderPadma(rows);
+      else if (name==="aussruta") renderAussruta(rows);
+      else if (name==="kafco") { const el=document.getElementById("screen-kafco"); el.innerHTML=""; const b=buildTable(rows,"BIG FUNDS RECEIVED FROM KAFCO",new Set(),"kafco"); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
+      else if (name==="bank")  { const el=document.getElementById("screen-bank");  el.innerHTML=""; const b=buildTable(rows,"BANK ACCOUNTS — GEETASREE HALDER",new Set([3]),"bank",["Bank Name","Name","Account No","Branch","Status"]); typeof b==="string"?el.innerHTML=b:el.appendChild(b); }
       document.getElementById("last-sync").textContent = "Offline — showing last saved data";
     } else {
       document.getElementById("screen-"+name).innerHTML=`<div class='state-box'><div style='font-size:42px;margin-bottom:12px'>⚠️</div><strong>Could not load data</strong><br><br>${e.message}<br><br>Make sure the sheet is <strong>publicly shared</strong>.</div>`;
