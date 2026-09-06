@@ -373,7 +373,7 @@ function renderAussruta(rows) {
   // Filter out: blank rows AND the merged title row
   // The merged title row will have all text in col 0 and empty col 1,
   // OR col 0 contains "BBP" or "GERMANY" — skip it
-const dataRows = rows.filter(r => (r[0]||"").trim() !== "");
+const dataRows = rows.filter(r => (r[0]||"").trim() !== "" || (r[1]||"").trim() !== "");
 
   if (dataRows.length === 0) {
     screen.innerHTML = "<div class='state-box'>No data found.</div>";
