@@ -209,7 +209,7 @@ const RANGES = {
   dps:      "A22:G29",
   padma:    "I23:K28",
   bank:     "A38:D43",
-  aussruta: "G38:H115",  // deliberately include G37 so we can detect and skip the merged title
+  aussruta: "G38:H150",
 };
 
 const REFRESH_MS = 300_000;
@@ -364,18 +364,11 @@ function renderPadma(rows) {
 }
 
 // ══ AUSSRUTA render ═══════════════════════════════
-// Handles the merged title row by detecting and skipping it,
-// then uses row 1 (AGENCY row) as first data row with hardcoded headers
 function renderAussruta(rows) {
   saveCache("cache_aussruta", rows);
   const screen = document.getElementById("screen-aussruta");
 
-  // Filter out: blank rows AND the merged title row
-  // The merged title row will have all text in col 0 and empty col 1,
-  // OR col 0 contains "BBP" or "GERMANY" — skip it
-const dataRows = rows.filter(r => (r[0]||"").trim() !== "" || (r[1]||"").trim() !== "");
-
-  if (dataRows.length === 0) {
+  if (!rows || rows.length === 0) {
     screen.innerHTML = "<div class='state-box'>No data found.</div>";
     return;
   }
@@ -387,29 +380,35 @@ const dataRows = rows.filter(r => (r[0]||"").trim() !== "" || (r[1]||"").trim() 
     <tr><th>Item</th><th>Amount</th></tr>
   </thead><tbody></tbody>`;
   const tbody = tbl.querySelector("tbody");
+  let hasRows = false;
 
-  for (const r of dataRows) {
+  for (const r of rows) {
     const item   = (r[0]||"").trim();
     const amount = (r[1]||"").trim();
+
+    // Skip completely empty rows
     if (!item && !amount) continue;
 
+    hasRows = true;
     const isTotalRow = item.toUpperCase() === "TOTAL";
     const tr = document.createElement("tr");
     tr.className = isTotalRow ? "row-total" : "data-row";
 
     const td0 = document.createElement("td");
     td0.textContent = item || "—";
-    if (isTotalRow) td0.style.fontWeight = "700";
 
     const td1 = document.createElement("td");
     td1.className = "num";
-    // Keep amount exactly as sheet shows it (may be ৳ or $ formatted)
     td1.textContent = amount || "—";
-    if (isTotalRow) td1.style.fontWeight = "700";
 
     tr.appendChild(td0);
     tr.appendChild(td1);
     tbody.appendChild(tr);
+  }
+
+  if (!hasRows) {
+    screen.innerHTML = "<div class='state-box'>No data found.</div>";
+    return;
   }
 
   wrap.appendChild(tbl);
